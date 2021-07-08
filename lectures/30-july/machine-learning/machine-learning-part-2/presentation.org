@@ -1,0 +1,258 @@
+* export options                                                   :noexport:
+** general
+   #+STARTUP: beamer
+   #+OPTIONS: H:3 toc:nil num:t date:nil
+
+   #+LaTeX_CLASS: beamer
+   #+LaTeX_CLASS_OPTIONS: [presentation,mathserif,table]
+
+** presentation info
+   #+TITLE: Machine learning Part 2
+   # #+AUTHOR: Jérôme Dockès
+
+   #+BEAMER_HEADER: \author{Jérôme Dockès}
+   #+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{figures/mcgill-university.png} \hspace{1.5cm} \includegraphics[height=1.5cm]{figures/origami-lab-logo.png}}
+   #+BEAMER_HEADER: \date{QLS course 2021-07-30}
+
+** latex headers
+*** fonts and beamer
+    #+LaTeX_HEADER: \beamertemplatenavigationsymbolsempty
+
+    #+LaTeX_HEADER: \usepackage[T1]{fontenc}
+
+    #+LaTeX_HEADER: \usepackage{DejaVuSans}
+    # #+LaTeX_HEADER: \usepackage{DejaVuSansMono}
+
+    # #+LaTeX_HEADER: \usepackage[default]{opensans}
+    # #+LaTeX_HEADER: \usepackage{lmodern}
+    # #+LaTeX_HEADER: \usepackage{libertine}
+    # #+LaTeX_HEADER: \usepackage{iwona}
+    # #+LaTeX_HEADER: \usepackage[sc,osf]{mathpazo}
+    # #+LaTeX_HEADER: \usepackage{mathptmx}
+    # #+LaTeX_HEADER: \usepackage{helvet}
+    # #+LaTeX_HEADER: \usefonttheme{default}
+
+    # #+LaTeX_HEADER: \usefonttheme{serif}
+    #+LaTeX_HEADER: \usefonttheme{professionalfonts}
+
+    #+LaTeX_HEADER: \usepackage[euler-digits,euler-hat-accent]{eulervm}
+
+    # #+LaTeX_HEADER: \setbeamertemplate{itemize items}[circle]
+    #+LaTeX_HEADER: \setbeamertemplate{itemize items}{•}
+    #+LaTeX_HEADER: \setbeamertemplate{enumerate items}[default]
+
+    # #+LaTex_HEADER: \AtBeginSection[]
+    # #+LaTex_HEADER: {
+    # #+LaTex_HEADER: \begin{frame}<beamer>
+    # #+LaTex_HEADER: \frametitle{Outline}
+    # #+LaTex_HEADER: \tableofcontents[currentsection]
+    # #+LaTex_HEADER: \end{frame}
+    # #+LaTex_HEADER: }
+    # #+LaTex_HEADER: \setcounter{tocdepth}{1}
+
+    #+LaTeX_HEADER: \setbeamertemplate{headline}{}
+    #+LaTeX_HEADER: \setbeamertemplate{footline}{
+    #+LaTeX_HEADER: \leavevmode%
+    #+LaTeX_HEADER: \hbox{%
+    #+LaTeX_HEADER: \begin{beamercolorbox}[wd=\paperwidth,ht=2.25ex,dp=1ex,right]{fg=black}%
+    #+LaTeX_HEADER:     \usebeamerfont{section in head/foot}\insertsection\hspace*{2em}
+    #+LaTeX_HEADER:     \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+    #+LaTeX_HEADER: \end{beamercolorbox}%
+    #+LaTeX_HEADER: }%
+    #+LaTeX_HEADER: \vskip0pt%
+    #+LaTeX_HEADER: }
+    #+LaTeX_HEADER: \usepackage{appendixnumberbeamer}
+
+    #+LaTeX_HEADER: \setbeamersize{text margin left=3mm,text margin right=3mm}
+*** footnote citations
+    #+LaTeX_HEADER: \newcommand\blfootnote[1]{%
+    #+LaTeX_HEADER: \begingroup
+    #+LaTeX_HEADER: \renewcommand\thefootnote{}\footnote{#1}%
+    #+LaTeX_HEADER: \addtocounter{footnote}{-1}%
+    #+LaTeX_HEADER:  \endgroup
+    #+LaTeX_HEADER: }
+    #+LaTeX_HEADER: \setbeamerfont{footnote}{size=\tiny}
+*** other imports
+    #+LaTeX_HEADER: \usepackage{tikz}
+    #+LaTeX_HEADER: \usepackage[retainorgcmds]{IEEEtrantools}
+    #+LaTeX_HEADER: \hypersetup{colorlinks=true, allcolors=., urlcolor=blue}
+    #+LaTeX_HEADER: \usepackage[absolute,overlay]{textpos}
+*** math operators
+    #+LaTex_HEADER: \newcommand{\eg}{e.g.\,}
+    #+LaTex_HEADER: \newcommand{\ie}{i.e.\,}
+    #+LaTex_HEADER: \newcommand{\aka}{a.k.a.\,}
+    #+LaTex_HEADER: \newcommand{\etc}{\emph{etc.}\,}
+
+    #+LaTex_HEADER: \newcommand{\X}{{\mathbold X}}
+    #+LaTex_HEADER: \newcommand{\x}{{\mathbold x}}
+    #+LaTex_HEADER: \newcommand{\Y}{{\mathbold Y}}
+    #+LaTex_HEADER: \newcommand{\y}{{\mathbold y}}
+    #+LaTex_HEADER: \newcommand{\B}{{\mathbold B}}
+    #+LaTex_HEADER: \newcommand{\R}{\mathbb{R}}
+    #+LaTex_HEADER: \DeclareMathOperator*{\argmin}{argmin}
+    #+LaTex_HEADER: \DeclareMathOperator*{\argmax}{argmax}
+    #+LaTex_HEADER: \DeclareMathOperator*{\tv}{TV}
+    #+LaTex_HEADER: \DeclareMathOperator*{\Tr}{Tr}
+    #+LaTex_HEADER: \DeclareMathOperator*{\FFT}{FFT}
+    #+LaTex_HEADER: \DeclareMathOperator*{\IFFT}{IFFT}
+    #+LaTex_HEADER: \DeclareMathOperator*{\diag}{diag}
+    #+LaTex_HEADER: \DeclareMathOperator*{\supp}{supp}
+    #+LaTex_HEADER: \DeclareMathOperator*{\tf}{tf}
+    #+LaTex_HEADER: \DeclareMathOperator*{\idf}{idf}
+    #+LaTex_HEADER: \DeclareMathOperator*{\df}{df}
+    #+LaTex_HEADER: \DeclareMathOperator*{\Var}{Var}
+    #+LaTex_HEADER: \DeclareMathOperator*{\Frob}{Frob}
+    #+LaTex_HEADER: \DeclareMathOperator*{\F}{F}
+    #+LaTex_HEADER: \DeclareMathOperator*{\softmax}{softmax}
+    #+LaTex_HEADER: \DeclareMathOperator*{\AUC}{AUC}
+
+    #+LaTeX_HEADER: \usepackage{bm}
+
+** color theme
+   # #+BEAMER_COLOR_THEME: dove
+   # #+BEAMER_COLOR_THEME: seagull
+
+   #+LaTeX_HEADER: \usecolortheme{dove}
+   #+LaTeX_HEADER: \setbeamercolor*{block title example}{fg=black,bg=white}
+   #+LaTeX_HEADER: \setbeamercolor*{block body example}{fg=black,bg=white}
+* Intro
+** Recap of part 1
+*** Recap of part 1
+**** Supervised learning
+       - Regression: least-squares linear regression
+       - Classification: logistic regression
+**** Regularization
+       - \(\ell_2\) \aka ridge regularization
+**** Model evaluation and selection
+       - Out-of-sample generalization; independent test set
+       - Performance metrics:
+         - regression: mean squared error
+         - classification: accuracy, ROC curve
+       - Cross-validation
+**** part1                                                   :B_structureenv:
+     :PROPERTIES:
+     :BEAMER_env: structureenv
+     :END:
+  Don't remember? watch Part 1 again!
+*** Notation & vocabulary
+**** Supervised learning framework
+ \begin{equation}
+ Y = f(X) + E
+ \end{equation}
+\vspace{-10pt}
+ - \(Y \in \R \): output (\aka target, dependent variable) to predict
+ - \(X \in \R^p \): features (\aka inputs, regressors, descriptors, independent variables)
+ - \(E \in \R \): unmodelled noise
+ - \(f\): the function we try to approximate
+**** Example: linear regression
+\vspace{-20pt}
+ \begin{IEEEeqnarray}{rCl}
+ Y & = & \beta_0 + \langle X, \beta \rangle + E \\
+& = & \beta_0 + \sum_{j=1}^p X_j \, \beta_j + E
+ \end{IEEEeqnarray}
+"learning" = estimating \(\beta_0 \in \R\) and \(\beta \in \R^p\)
+* Dimensionality reduction
+** Intro
+*** Dimensionality reduction
+**** Problems when the number of features \(p\) becomes large
+     - Bigger errors on test data (larger variance of predictions)
+     - Numerical stability issues
+     - Computational cost and memory usage
+*** Model complexity: overfitting
+    - Model complexity increases with dimension.
+    - Example: a linear model in dimension \(p\) can fit exactly (0 training error) any set of \(p + 1\) points.
+    - Risk of overfitting: fitting exactly training data but failing on test data
+
+    #+ATTR_LATEX: :height .7\textheight
+    [[file:figures/generated/ridge_overfitting/mse.pdf]]
+*** Cost of fitting many parameters
+    - Many algorithms require polynomial time in \(p\)
+    - Implementations often make copies of the design matrix (\eg for centering & rescaling)
+    #+ATTR_LATEX: :height .7\textheight
+    [[file:figures/generated/ridge_overfitting/durations.pdf]]
+** Univariate feature selection
+*** Univariate feature selection
+    - \aka feature screening, filtering ...
+    - Check features (columns of \(X\)) one by one for association with the output \(y\)
+    - Keep only a fixed number or percentage of the features
+**** Simple (linear) association criteria
+     - for regression: correlation
+     - for classification: ANalysis Of VAriance
+**** Read more in the scikit-learn user guide
+ https://scikit-learn.org/stable/modules/feature_selection.html#feature-selection
+
+*** Univariate feature selection
+    Keeping only the 10 best features (most correlated with \(y\))
+    #+ATTR_LATEX: :height .7\textheight
+    [[file:figures/generated/ridge_overfitting/mse_with_dim_reduction.pdf]]
+
+*** Same plot in log scale
+    #+ATTR_LATEX: :height .7\textheight
+    [[file:figures/generated/ridge_overfitting/mse_with_dim_reduction_log.pdf]]
+
+** Linear decomposition methods
+*** Linear decomposition methods
+**** Maybe OK to drop $X_2$:
+     \vspace{-10pt}
+     #+ATTR_LATEX: :height .3\textheight
+     [[file:figures/generated/pca/cloud_aligned.pdf]]
+     \vspace{-20pt}
+**** Data low-dimensional but no feature can be dropped:
+     #+ATTR_LATEX: :height .3\textheight
+     [[file:figures/generated/pca/cloud_not_aligned.pdf]]
+
+Find a better referential in which to represent the data
+*** Linear regression: projection on the column space of \(X\)
+**** Approximate \(y\) as a combination of the columns of \(X\)
+  \begin{equation}
+  \hat{\y} = \X \, \hat{\beta} \in \R^n
+  \end{equation}
+- The columns of \(X\) are a family of \(p\) \(n\)-dimensional vectors
+- When \(p\) is high or the columns of \(X\) are correlated, we want to use a family of \(k < p\) instead
+- Feature selection: drop some columns, keep only \(k\)
+- Could we build a better family of \(k\) vectors?
+
+*** Principal Components Regression
+- Approximation of \(X\) of rank \(k\): find a family of \(k\) basis vectors and approximate each column of \(X\) as a mixture of these \(k\) vectors
+- Find the family that gives the best approximation: the one with the smallest Frobenius norm of the reconstruction error.
+- This is the same as finding the \(k\) orthogonal directions in which \(X\) varies the most
+
+*** Principal Components: feature space
+#+ATTR_LATEX: :height .3\textheight
+[[file:figures/generated/pca/cloud_not_aligned_with_pc.pdf]]
+
+*** Ridge regression and PCA
+    - Both ridge regression and PC regression compute the coordinates of \(y\) in the basis given by the SVD of \(X\)
+    - ridge shrinks the coefficients of sv \(d_j\) by a factor \(d_j^2 / (d_j^2 + \lambda)\)
+    - PC regression sets the coefficient to 0 for all but the \(k\) largest \(d_j\)
+*** Other decomposition methods
+- Take \(y\) into account
+- Different criteria (sparsity, independence, ...)
+
+* More on cross-validation
+** More on cross-validation
+
+
+*** Nested cross-validation: setting hyperparameters
+**** How can we choose:
+     - Number of features or PCA components \(k\)?
+     - The ridge hyperparameter \(\lambda\)?
+
+Try a few and pick the best one...
+But measure its performance on separate data!
+*** Some common pitfalls with cross-validation
+    - Ignoring dependencies between samples
+    - Ignoring dependencies between CV scores
+    - Over-interpreting good CV scores
+
+*** Two sources of variance: training data and test sample
+    Don't use Leave-One-Out Cross-validation
+* Neuroimaging application: a task-fMRI decoding pipeline
+** FMRI decoding
+*** fMRI decoding
+    - Describe data and task
+*** The decoding pipeline
+    - Masking: extracting voxels that are inside the brain
+    - Feature selection with ANOVA
+    - Classifier: logistic regression
+*** Implementation: in class
