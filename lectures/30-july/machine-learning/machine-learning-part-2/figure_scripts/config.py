@@ -15,6 +15,12 @@ mpl.rc("text", usetex=True)
 # mpl.rc("font", family="serif")
 mpl.rc(
     "text.latex",
-    preamble=r"\usepackage{eulervm} \usepackage{amssymb}"
-    r"\usepackage{amsmath} \usepackage{bm} \usepackage{DejaVuSans}",
+    preamble=r"\usepackage{eulervm} \usepackage{amssymb} "
+    r"\usepackage{amsmath} \usepackage{bm} \usepackage{DejaVuSans} "
+    r"\newcommand{\X}{{\mathbold X}} "
+    r"\newcommand{\y}{{\mathbold y}} "
+    r"\newcommand{\x}{{\mathbold x}} "
+    r"\newcommand{\W}{{\mathbold W}} "
+    r"\newcommand{\bH}{{\mathbold H}} "
+    r"\newcommand{\bbeta}{{\mathbold \beta}} ",
 )

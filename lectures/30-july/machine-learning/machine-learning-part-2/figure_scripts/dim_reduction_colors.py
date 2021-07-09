@@ -59,13 +59,14 @@ def make_data(n_components=2, seed=5):
     }
 
 
-def paint_axes(ax, colors):
+def paint_axes(ax, colors, top_right_align=False):
     ax.set_axis_off()
     w = 1 / len(colors)
-    start = 0
+    start = .2 * w if top_right_align else 0.
+    y0 = .1 if top_right_align else .05
     for c in colors:
         rect = mpatches.Rectangle(
-            (start, 0.05),
+            (start, y0),
             w * 0.8,
             0.9,
             transform=ax.transAxes,
@@ -81,7 +82,7 @@ def write_axes(ax, text):
     ax.text(
         0.5,
         0.5,
-        text,
+        rf"\large{{{text}}}",
         ha="center",
         va="center",
         transform=ax.transAxes,
@@ -101,37 +102,41 @@ def show_vector(ax, coords, orient, positive=False):
         ax.bar(range(len(coords)), coords, color=color)
 
 
-def show_regression(data, reduced_dim):
-    figw = 3.5 if reduced_dim else 6
+def show_regression(data, reduced_dim, show_beta_horizontal_barplot=False, w_name=None):
+    # figw = 2.5 if reduced_dim else 3.5
+    figw = 2.5
     fig = plt.figure(figsize=(figw, 3))
     X = data["W_scaled"].T if reduced_dim else data["X"].T
     gs = fig.add_gridspec(
         2,
         7,
         width_ratios=[1, 1, 1, 1, len(X), 0.0, 1],
-        height_ratios=[1.0, 0.3],
-        hspace=0.1,
+        height_ratios=[1.0, 0.25],
+        hspace=0.,
     )
     y_ax = fig.add_subplot(gs[0, 0])
-    y_ax.set_title(r"$y$")
+    y_ax.set_title(r"$\y$")
     paint_axes(y_ax, [data["y"]])
     y_hat_ax = fig.add_subplot(gs[0, 2])
-    y_hat_ax.set_title(r"$\hat{y}$")
+    y_hat_ax.set_title(r"$\hat{\y}$")
     paint_axes(y_hat_ax, [data["y_hat_reduced"] if reduced_dim else data["y"]])
     x_ax = fig.add_subplot(gs[0, 4])
-    x_ax.set_title(r"$W$" if reduced_dim else r"$X$")
+    if w_name is None:
+        w_name = r"$\W$" if reduced_dim else r"$\X$"
+    x_ax.set_title(w_name)
     paint_axes(x_ax, X)
     approx_ax = fig.add_subplot(gs[0, 1])
     write_axes(approx_ax, r"$\approx$")
     equal_ax = fig.add_subplot(gs[0, 3])
     write_axes(equal_ax, "=")
-    beta_h_ax = fig.add_subplot(gs[0, 6])
-    beta_h_ax.set_title(r"$\hat{\beta}$")
-    show_vector(
-        beta_h_ax,
-        data["reduced_coef"] if reduced_dim else data["full_coef"],
-        "h",
-    )
+    if show_beta_horizontal_barplot:
+        beta_h_ax = fig.add_subplot(gs[0, 6])
+        beta_h_ax.set_title(r"$\hat{\bbeta}$")
+        show_vector(
+            beta_h_ax,
+            data["reduced_coef"] if reduced_dim else data["full_coef"],
+            "h",
+        )
     beta_v_ax = fig.add_subplot(gs[1, 4])
     show_vector(
         beta_v_ax,
@@ -141,7 +146,7 @@ def show_regression(data, reduced_dim):
     beta_v_ax.text(
         0.5,
         -0.1,
-        r"$\hat{\beta}$",
+        r"\large $\hat{\bbeta}$",
         ha="center",
         va="top",
         transform=beta_v_ax.transAxes,
@@ -150,38 +155,42 @@ def show_regression(data, reduced_dim):
 
 
 def show_factorization(data):
-    fig = plt.figure(figsize=(6, 2))
+    fig = plt.figure(figsize=(6, 3))
     n_dim = data["X"].shape[1]
     n_components = data["W"].shape[1]
     gs = fig.add_gridspec(
-        2,
+        3,
         7,
-        width_ratios=[n_dim, 1, n_dim, 1, n_components, 0.0, n_dim],
-        height_ratios=[n_components, n_dim - n_components],
+        width_ratios=[n_dim, 2, n_dim, 2, n_components, 0.0, n_dim],
+        height_ratios=[n_components, 1.5 * n_dim, 0],
         hspace=0,
+        wspace=0
     )
-    x_ax = fig.add_subplot(gs[:, 0])
-    x_ax.set_title(r"$X$")
-    paint_axes(x_ax, data["X"].T)
-    proj_ax = fig.add_subplot(gs[:, 2])
-    proj_ax.set_title(r"$X'$")
+    x_ax = fig.add_subplot(gs[1, 0])
+    x_ax.set_title(r"$\X$")
+    paint_axes(x_ax, data["X"].T, True)
+    proj_ax = fig.add_subplot(gs[1, 2])
+    # proj_ax.set_title(r"$\X'$")
+    proj_ax.set_title(r"$\W \, \bH$")
     # paint_axes(proj_ax, data["proj_scaled"].T)
-    paint_axes(proj_ax, data["proj_clipped"].T)
-    w_ax = fig.add_subplot(gs[:, 4])
-    w_ax.set_title(r"$W$")
-    paint_axes(w_ax, data["W_scaled"].T)
-    approx_ax = fig.add_subplot(gs[:, 1])
+    paint_axes(proj_ax, data["proj_clipped"].T, True)
+    w_ax = fig.add_subplot(gs[1, 4])
+    w_ax.set_title(r"$\W$")
+    paint_axes(w_ax, data["W_scaled"].T, True)
+    approx_ax = fig.add_subplot(gs[1, 1])
     write_axes(approx_ax, r"$\approx$")
-    equal_ax = fig.add_subplot(gs[:, 3])
+    equal_ax = fig.add_subplot(gs[1, 3])
     write_axes(equal_ax, "=")
     H_ax = fig.add_subplot(gs[0, 6])
     H_ax.imshow(data["H"], cmap="Greys")
-    H_ax.set_title(r"$H$")
-    H_ax.set_axis_off()
+    H_ax.set_title(r"$\bH$")
+    # H_ax.set_axis_off()
+    H_ax.set_xticks([])
+    H_ax.set_yticks([])
     return fig
 
 
-for n_components in range(1, 5):
+for n_components in [1, 2, 3, 4, 7]:
     print(f"{n_components} components")
     data = make_data(n_components, 0)
     fig = show_regression(data, False)
@@ -198,6 +207,14 @@ for n_components in range(1, 5):
             bbox_inches="tight",
         )
     plt.close("all")
+    if n_components == 3:
+        fig = show_regression(data, True, w_name=r"$\mathbold{U}$")
+        for ext in ("pdf", "png"):
+            fig.savefig(
+                FIGURES_DIR / f"regression_reduced_{n_components}_svd.{ext}",
+                bbox_inches="tight",
+            )
+        plt.close("all")
     fig = show_factorization(data)
     for ext in ("pdf", "png"):
         fig.savefig(

@@ -84,10 +84,16 @@
     #+LaTex_HEADER: \newcommand{\etc}{\emph{etc.}\,}
 
     #+LaTex_HEADER: \newcommand{\X}{{\mathbold X}}
+    #+LaTex_HEADER: \newcommand{\bSigma}{{\mathbold \Sigma}}
     #+LaTex_HEADER: \newcommand{\x}{{\mathbold x}}
+    #+LaTex_HEADER: \newcommand{\bbeta}{{\mathbold \beta}}
     #+LaTex_HEADER: \newcommand{\Y}{{\mathbold Y}}
     #+LaTex_HEADER: \newcommand{\y}{{\mathbold y}}
     #+LaTex_HEADER: \newcommand{\B}{{\mathbold B}}
+    #+LaTex_HEADER: \newcommand{\W}{{\mathbold W}}
+    #+LaTex_HEADER: \newcommand{\U}{{\mathbold U}}
+    #+LaTex_HEADER: \newcommand{\V}{{\mathbold V}}
+    #+LaTex_HEADER: \newcommand{\bH}{{\mathbold H}}
     #+LaTex_HEADER: \newcommand{\R}{\mathbb{R}}
     #+LaTex_HEADER: \DeclareMathOperator*{\argmin}{argmin}
     #+LaTex_HEADER: \DeclareMathOperator*{\argmax}{argmax}
@@ -154,10 +160,23 @@
 * Dimensionality reduction
 ** Intro
 *** Dimensionality reduction
+**** Until now
+\(\x\) \(\rightarrow\) linear or logistic regression \(\rightarrow\) \(\hat{\y}\)
+**** Add a step in the pipeline: simplifying the inputs
+\(\x\) \(\rightarrow\) dimensionality reduction \(\rightarrow\) linear or logistic regression \(\rightarrow\) \(\hat{\y}\)
+*** Dimensionality reduction
 **** Problems when the number of features \(p\) becomes large
      - Bigger errors on test data (larger variance of predictions)
      - Numerical stability issues
      - Computational cost and memory usage
+*** Toy example: linear regression with simulated data
+    - Generate \(\X \in \R^{n \times 3}\), \(\mathbold{\bbeta} \in \R^3\), and \(\y = \X \, \bbeta \in R^n\)
+    - Append columns containing random noise to \(\X\)
+    - Now \(\X \in \R^{n \times p}\), with \(p \geq 3\), but only the first 3 columns are linked with \(\y\)
+    - Split into training and testing tests and evaluate a linear regression model: what happens when \(p\) becomes large?
+  \vfill
+
+See [[https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression][=sklearn.datasets.make_regression=]] for generating data
 *** Model complexity: overfitting
     - Model complexity increases with dimension.
     - Example: a linear model in dimension \(p\) can fit exactly (0 training error) any set of \(p + 1\) points.
@@ -173,7 +192,7 @@
 ** Univariate feature selection
 *** Univariate feature selection
     - \aka feature screening, filtering ...
-    - Check features (columns of \(X\)) one by one for association with the output \(y\)
+    - Check features (columns of \(\X\)) one by one for association with the output \(\y\)
     - Keep only a fixed number or percentage of the features
 **** Simple (linear) association criteria
      - for regression: correlation
@@ -182,7 +201,7 @@
  https://scikit-learn.org/stable/modules/feature_selection.html#feature-selection
 
 *** Univariate feature selection
-    Keeping only the 10 best features (most correlated with \(y\))
+    Keeping only the 10 best features (most correlated with \(\y\))
     #+ATTR_LATEX: :height .7\textheight
     [[file:figures/generated/ridge_overfitting/mse_with_dim_reduction.pdf]]
 
@@ -192,7 +211,7 @@
 
 ** Linear decomposition methods
 *** Linear decomposition methods
-**** Maybe OK to drop $X_2$:
+**** Maybe OK to drop $\X_2$:
      \vspace{-10pt}
      #+ATTR_LATEX: :height .3\textheight
      [[file:figures/generated/pca/cloud_aligned.pdf]]
@@ -202,65 +221,143 @@
      [[file:figures/generated/pca/cloud_not_aligned.pdf]]
 
 Find a better referential in which to represent the data
-*** Linear regression: projection on the column space of \(X\)
+*** COMMENT Linear regression: projection on the column space of \(\X\)
 **** Approximate \(y\) as a combination of the columns of \(X\)
   \begin{equation}
-  \hat{\y} = \X \, \hat{\beta} \in \R^n
+  \hat{\y} = \X \, \hat{\bbeta} \in \R^n
   \end{equation}
 - The columns of \(X\) are a family of \(p\) \(n\)-dimensional vectors
 - When \(p\) is high or the columns of \(X\) are correlated, we want to use a family of \(k < p\) instead
 - Feature selection: drop some columns, keep only \(k\)
 - Could we build a better family of \(k\) vectors?
 *** Linear regression: projection on the column space of \(X\)
-    #+ATTR_LATEX: :height .7\textheight
-    [[file:figures/generated/dim_reduction_colors/regression_full_3.pdf]]
-*** Linear decomposition: low-rank approximation of \(X\)
+**** top                                                     :B_structureenv:
+     :PROPERTIES:
+     :BEAMER_env: structureenv
+     :END:
+***** equation                                               :B_column:BMCOL:
+      :PROPERTIES:
+      :BEAMER_env: column
+      :BEAMER_col: .3
+      :END:
+      \begin{equation}
+      \hat{\y} = \X \, \hat{\bbeta}
+      \end{equation}
+
+***** equation                                               :B_column:BMCOL:
+      :PROPERTIES:
+      :BEAMER_env: column
+      :BEAMER_col: .7
+      :END:
+      \vspace{-17}
+      #+ATTR_LATEX: :height .7\textheight
+      [[file:figures/generated/dim_reduction_colors/regression_full_3.pdf]]
+
+**** bottom                                                  :B_structureenv:
+     :PROPERTIES:
+     :BEAMER_env: structureenv
+     :END:
+     - Too many features: high variance & unstable solution
+     - Feature selection: drop some columns of \(\X\)
+     - Other ways to build a family of \(k\) vectors on which to regress \(\y\)?
+*** Linear decomposition: low-rank approximation of \(\X\)
+    Minimize
+\begin{equation}
+\| \X - \W \, \bH \|_{\F}^2 = \sum_{i, j} ( \X_{i,j} - (\W \, \bH)_{i,j})^2
+\end{equation}
     #+ATTR_LATEX: :height .5\textheight
     [[file:figures/generated/dim_reduction_colors/factorization_3.pdf]]
 *** Linear regression after dimensionality reduction
+    \begin{equation}
+    \hat{\y} = \W \, \hat{\bbeta}
+    \end{equation}
     #+ATTR_LATEX: :height .7\textheight
     [[file:figures/generated/dim_reduction_colors/regression_reduced_3.pdf]]
-*** Principal Components Regression
-- Approximation of \(X\) of rank \(k\): find a family of \(k\) basis vectors and approximate each column of \(X\) as a mixture of these \(k\) vectors
-- Find the family that gives the best approximation: the one with the smallest Frobenius norm of the reconstruction error.
-- This is the same as finding the \(k\) orthogonal directions in which \(X\) varies the most
+*** Prediction for a new data point \(\x \in \R^{p}\)
+    - Find the combination of rows of \(\bH\) that is closest to \(\x\): regress \(\x\) on \(\bH^T\)
+    - Multiply by \(\hat{\bbeta}\)
+    \begin{equation}
+\x \in \R^p \rightarrow \text{projection} \rightarrow \mathbold{w} \in \R^k \rightarrow \langle \cdot \, , \, \hat{\bbeta}\rangle \rightarrow \hat{y} \in \R
+    \end{equation}
+*** Principal Component Analysis
+    - Matrix factorization based on Singular Value Decomposition:
+    \begin{equation}
+    \X = \U \, \bSigma \, \V^T
+    \end{equation}
+    with \(\X \in \R^{n \times p}\), \(\U \in \R^{n \times p}\), \(\bSigma \in \R^{p \times p}\), \(\V \in \R^{p \times p}\)
+    - \(\bSigma \succeq 0\) diagonal with decreasing values \(\bSigma_{j,j}\) along the diagonal
+    - \(\U^T\, \U = I_p\)
+    - \(\V^T\, \V = I_p\)
 
-*** Principal Components: feature space
+Truncating the SVD to keep only the first \(k\) components gives the best rank-\(k\) approximation of \(\X\)
 #+ATTR_LATEX: :height .3\textheight
 [[file:figures/generated/pca/cloud_not_aligned_with_pc.pdf]]
 
-*** Ridge regression and PCA
-    - Both ridge regression and PC regression compute the coordinates of \(y\) in the basis given by the SVD of \(X\)
-    - ridge shrinks the coefficients of sv \(d_j\) by a factor \(d_j^2 / (d_j^2 + \lambda)\)
-    - PC regression sets the coefficient to 0 for all but the \(k\) largest \(d_j\)
 *** Other decomposition methods
-- Take \(y\) into account
-- Different criteria (sparsity, independence, ...)
+Many other methods use the same objective (sum of squared reconstruction errors), but add penalties or constraints on the factors
+- Dictionary Learning
+- Non-negative Matrix Factorization
+- K-means clustering
+- ...
 
+**** What about \(\y\)?
+     - PCA is an example of /unsupervised/ learning: it does not use \(\y\)
+     - Some other methods take it into account: \eg Partial Least Squares
+*** Ridge regression and PCA
+    - Both ridge regression and PC regression compute the coordinates of \(\y\) in the basis given by the SVD of \(\X\)
+    - ridge shrinks the coefficients of Singular Vector \(j\) by a factor \(\sigma_j^2 / (\sigma_j^2 + \lambda)\)
+    - PC regression sets the coefficient to 0 for all but the \(k\) largest \(\sigma_j\)
+
+#+ATTR_LATEX: :height .6\textheight
+[[file:figures/generated/dim_reduction_colors/regression_reduced_3_svd.pdf]]
 * More on cross-validation
 ** More on cross-validation
 
-
-*** Nested cross-validation: setting hyperparameters
+*** Setting hyperparameters
 **** How can we choose:
      - Number of features or PCA components \(k\)?
      - The ridge hyperparameter \(\lambda\)?
+**** answer                                                 :B_ignoreheading:
+     :PROPERTIES:
+     :BEAMER_env: ignoreheading
+     :END:
+     Try a few and pick the best one...
 
-Try a few and pick the best one...
-But measure its performance on separate data!
+     But measure its performance on separate data!
+*** Need for fresh test data
+    When you hear "best", "maximum", "select", ... think "bias"
+- I have 4 dice and want to find one that rolls high numbers
+- I roll them all once and select the die that gives the highest number
+- The selected die rolled a 5. Is 5 a good estimate of that die's average result? What if I had 1,000 dice?
+- I need to roll it again to get an unbiased estimate
+*** Nested cross-validation
+When you hear "best", "maximum", "select", ... think "bias"
+**** Setting the parameters
+     - *Select* \(\bbeta\) that gives the *best* prediction on training data
+     - The prediction score for \(\hat{\bbeta}\) is biased: compute a new score on unseen test data.
+**** Setting the hyperparameters
+     - Repeat step 1 for a few values of \(\lambda\), \(k\), \etc., fitting and testing several models
+     - *Select* the hyperparameter that obtains the *best* prediction on test data
+     - The prediction score of that model on /test/ data is biased: evaluate it again on unseen data
 *** Some common pitfalls with cross-validation
     - Ignoring dependencies between samples
+      - Multiple datapoints per participant
+      - Time series
+      - ...
     - Ignoring dependencies between CV scores
+      - Training sets overlap: cross-validation scores of different splits are not independent
     - Over-interpreting good CV scores
+      - Good CV scores on one dataset do not mean the model will always perform well on a new dataset
 
-*** Two sources of variance: training data and test sample
+*** COMMENT Two sources of variance: training data and test sample
     Don't use Leave-One-Out Cross-validation
 * Neuroimaging application: a task-fMRI decoding pipeline
 ** FMRI decoding
-*** fMRI decoding
-    - Describe data and task
+*** Supervised learning with fMRI
+    - Predict in which site / with which scanner a resting-state fMRI sequence was acquired
 *** The decoding pipeline
     - Masking: extracting voxels that are inside the brain
-    - Feature selection with ANOVA
+    - Connectivity: measuring correlations between brain regions to build a feature vector for each participant
+    - Univariate feature selection with ANalysis Of VAriance
     - Classifier: logistic regression
 *** Implementation: in class

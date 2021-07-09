@@ -94,7 +94,8 @@ ax.legend(
 # ax.set_yscale("log")
 ax.set_xlabel("Number of features $p$\n(only 3 are actually informative)")
 ax.set_title(
-    f"Fitting a linear regression on 100 points\n(median across {n_runs} runs)"
+    f"Fitting a linear regression on 100 points"
+    f"\n(median across {n_runs} simulations)"
 )
 
 fig.savefig(FIGURES_DIR / "mse.pdf", bbox_inches="tight")
@@ -120,7 +121,8 @@ fig, ax = plt.subplots(figsize=(4, 3))
 ax.plot(dimensions, durations)
 ax.set_xlabel("Number of features $p$")
 ax.set_title(
-    f"Fitting a linear regression on 100 points\n(median across {n_runs} runs)"
+    f"Fitting a linear regression on 100 points"
+    f"\n(median across {n_runs} simulations)"
 )
 ax.set_ylabel("Time fitting model (s)")
 fig.savefig(FIGURES_DIR / "durations.pdf", bbox_inches="tight")

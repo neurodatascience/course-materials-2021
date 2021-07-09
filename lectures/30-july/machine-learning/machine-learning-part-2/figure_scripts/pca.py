@@ -14,8 +14,8 @@ def show_cloud(X, color, ax):
     ax.set_ylim(-15, 20)
     ax.set_xticks([])
     ax.set_yticks([])
-    ax.set_xlabel("$X_1$")
-    ax.set_ylabel("$X_2$")
+    ax.set_xlabel("$\X_1$")
+    ax.set_ylabel("$\X_2$")
 
 
 rng = np.random.default_rng(0)
@@ -44,6 +44,7 @@ show_cloud(X, "gray", ax)
 v_len = 10
 ax.plot(*(np.asarray([X_mean, X_mean + Vh[0] * v_len]).T), color=TAB10_COLORS[0])
 ax.plot(*(np.asarray([X_mean, X_mean + Vh[1] * v_len]).T), color=TAB10_COLORS[1])
+ax.legend(["PC 1", "PC 2"], frameon=False, handlelength=1.)
 
 fig.savefig(
     str(FIGURES_DIR / "cloud_not_aligned_with_pc.pdf"), bbox_inches="tight"
