@@ -211,7 +211,15 @@ Find a better referential in which to represent the data
 - When \(p\) is high or the columns of \(X\) are correlated, we want to use a family of \(k < p\) instead
 - Feature selection: drop some columns, keep only \(k\)
 - Could we build a better family of \(k\) vectors?
-
+*** Linear regression: projection on the column space of \(X\)
+    #+ATTR_LATEX: :height .7\textheight
+    [[file:figures/generated/dim_reduction_colors/regression_full_3.pdf]]
+*** Linear decomposition: low-rank approximation of \(X\)
+    #+ATTR_LATEX: :height .5\textheight
+    [[file:figures/generated/dim_reduction_colors/factorization_3.pdf]]
+*** Linear regression after dimensionality reduction
+    #+ATTR_LATEX: :height .7\textheight
+    [[file:figures/generated/dim_reduction_colors/regression_reduced_3.pdf]]
 *** Principal Components Regression
 - Approximation of \(X\) of rank \(k\): find a family of \(k\) basis vectors and approximate each column of \(X\) as a mixture of these \(k\) vectors
 - Find the family that gives the best approximation: the one with the smallest Frobenius norm of the reconstruction error.
