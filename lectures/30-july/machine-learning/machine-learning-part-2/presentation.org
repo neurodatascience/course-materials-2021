@@ -125,19 +125,28 @@
 ** Recap of part 1
 *** Recap of part 1
 **** Supervised learning
+     :PROPERTIES:
+     :BEAMER_act: <1->
+     :END:
        - Regression: least-squares linear regression
        - Classification: logistic regression
 **** Regularization
+     :PROPERTIES:
+     :BEAMER_act: <2->
+     :END:
        - \(\ell_2\) \aka ridge regularization
 **** Model evaluation and selection
+     :PROPERTIES:
+     :BEAMER_act: <3->
+     :END:
        - Out-of-sample generalization; independent test set
        - Performance metrics:
          - regression: mean squared error
          - classification: accuracy, ROC curve
        - Cross-validation
-**** part1                                                   :B_structureenv:
+****  
      :PROPERTIES:
-     :BEAMER_env: structureenv
+     :BEAMER_act: <4->
      :END:
   Don't remember? watch Part 1 again!
 *** Notation & vocabulary
@@ -146,11 +155,15 @@
  Y = f(X) + E
  \end{equation}
 \vspace{-10pt}
+#+ATTR_BEAMER: :overlay +-
  - \(Y \in \R \): output (\aka target, dependent variable) to predict
  - \(X \in \R^p \): features (\aka inputs, regressors, descriptors, independent variables)
  - \(E \in \R \): unmodelled noise
  - \(f\): the function we try to approximate
 **** Example: linear regression
+     :PROPERTIES:
+     :BEAMER_act: <4->
+     :END:
 \vspace{-20pt}
  \begin{IEEEeqnarray}{rCl}
  Y & = & \beta_0 + \langle X, \beta \rangle + E \\
@@ -197,9 +210,15 @@ See [[https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_re
     - Check features (columns of \(\X\)) one by one for association with the output \(\y\)
     - Keep only a fixed number or percentage of the features
 **** Simple (linear) association criteria
+     :PROPERTIES:
+     :BEAMER_act: <2->
+     :END:
      - for regression: correlation
      - for classification: ANalysis Of VAriance
 **** Read more in the scikit-learn user guide
+     :PROPERTIES:
+     :BEAMER_act: <2->
+     :END:
  https://scikit-learn.org/stable/modules/feature_selection.html#feature-selection
 
 *** Univariate feature selection
@@ -343,9 +362,15 @@ Many other methods use the same objective (sum of squared reconstruction errors)
 *** Nested cross-validation
 When you hear "best", "maximum", "select", ... think "bias"
 **** Setting the parameters
+    :PROPERTIES:
+    :BEAMER_act: <2->
+    :END:
      - *Select* \(\bbeta\) that gives the *best* prediction on training data
      - The prediction score for \(\hat{\bbeta}\) is biased: compute a new score on unseen test data.
 **** Setting the hyperparameters
+    :PROPERTIES:
+    :BEAMER_act: <3->
+    :END:
      - Repeat step 1 for a few values of \(\lambda\), \(k\), \etc., fitting and testing several models
      - *Select* the hyperparameter that obtains the *best* prediction on test data
      - The prediction score of that model on /test/ data is biased: evaluate it again on unseen data
@@ -355,17 +380,28 @@ When you hear "best", "maximum", "select", ... think "bias"
 [[file:figures/generated/train_eval_test/cv.pdf]]
 see  [[https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html][=sklearn.model_selection.GridSearchCV=]]
 *** Some common pitfalls with cross-validation
-    - Fitting part of the pipeline on the whole dataset
-      - \eg fit PCA on all data, then do cross-validation on dim-reduced dataset
-      - use  [[https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html][=sklearn.pipeline.Pipeline=]]
-    - Ignoring dependencies between samples
-      - Multiple datapoints per participant
-      - Time series
-      - ...
-    - Ignoring dependencies between CV scores
-      - Training sets overlap: cross-validation scores of different splits are not independent
-    - Over-interpreting good CV scores
-      - Good CV scores on one dataset do not mean the model will always perform well on a new dataset
+**** Fitting part of the pipeline on the whole dataset
+     :PROPERTIES:
+     :BEAMER_act: <1->
+     :END:
+       + \eg fit PCA on all data, then do cross-validation on dim-reduced dataset
+       + use  [[https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html][=sklearn.pipeline.Pipeline=]]
+**** Ignoring dependencies between samples
+     :PROPERTIES:
+     :BEAMER_act: <2->
+     :END:
+         + Multiple datapoints per participant
+         + Time series
+**** Ignoring dependencies between CV scores
+     :PROPERTIES:
+     :BEAMER_act: <3->
+     :END:
+         + Training sets overlap: cross-validation scores of different splits are not independent
+**** Over-interpreting good CV scores
+     :PROPERTIES:
+     :BEAMER_act: <4->
+     :END:
+         + Good CV scores on one dataset do not mean the model will always perform well on a new dataset
 
 *** COMMENT Two sources of variance: training data and test sample
     Don't use Leave-One-Out Cross-validation

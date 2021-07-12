@@ -1,4 +1,4 @@
-% Created 2021-07-12 Mon 15:04
+% Created 2021-07-12 Mon 15:35
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,mathserif,table]{beamer}
 \usepackage[utf8]{inputenc}
@@ -99,22 +99,22 @@
 
 \maketitle
 \section{Intro}
-\label{sec:orga13c162}
+\label{sec:org1331465}
 \subsection{Recap of part 1}
-\label{sec:org3f6e514}
-\begin{frame}[label={sec:org17f5100}]{Recap of part 1}
-\begin{block}{Supervised learning}
+\label{sec:org89c51ad}
+\begin{frame}[label={sec:org05b4799}]{Recap of part 1}
+\begin{block}<1->{Supervised learning}
 \begin{itemize}
 \item Regression: least-squares linear regression
 \item Classification: logistic regression
 \end{itemize}
 \end{block}
-\begin{block}{Regularization}
+\begin{block}<2->{Regularization}
 \begin{itemize}
 \item \(\ell_2\) \aka ridge regularization
 \end{itemize}
 \end{block}
-\begin{block}{Model evaluation and selection}
+\begin{block}<3->{Model evaluation and selection}
 \begin{itemize}
 \item Out-of-sample generalization; independent test set
 \item Performance metrics:
@@ -125,24 +125,24 @@
 \item Cross-validation
 \end{itemize}
 \end{block}
-\begin{structureenv} %% part1
+\begin{block}<4->{ }
 Don't remember? watch Part 1 again!
-\end{structureenv}
+\end{block}
 \end{frame}
-\begin{frame}[label={sec:org059f4c1}]{Notation \& vocabulary}
+\begin{frame}[label={sec:orgf384cd9}]{Notation \& vocabulary}
 \begin{block}{Supervised learning framework}
 \begin{equation}
 Y = f(X) + E
 \end{equation}
 \vspace{-10pt}
-\begin{itemize}
+\begin{itemize}[<+->]
 \item \(Y \in \R\): output (\aka target, dependent variable) to predict
 \item \(X \in \R^p\): features (\aka inputs, regressors, descriptors, independent variables)
 \item \(E \in \R\): unmodelled noise
 \item \(f\): the function we try to approximate
 \end{itemize}
 \end{block}
-\begin{block}{Example: linear regression}
+\begin{block}<4->{Example: linear regression}
 \vspace{-20pt}
  \begin{IEEEeqnarray}{rCl}
  Y & = & \beta_0 + \langle X, \beta \rangle + E \\
@@ -152,10 +152,10 @@ Y = f(X) + E
 \end{block}
 \end{frame}
 \section{Dimensionality reduction}
-\label{sec:org621a6d0}
+\label{sec:org470c8b6}
 \subsection{Intro}
-\label{sec:orgb42431d}
-\begin{frame}[label={sec:orgaccec9a}]{Dimensionality reduction}
+\label{sec:orgf7217be}
+\begin{frame}[label={sec:orge578789}]{Dimensionality reduction}
 \begin{block}{Until now}
 \begin{center}
 \includegraphics[height=.12 \textheight]{figures/graphs/pipeline-1.pdf}
@@ -167,7 +167,7 @@ Y = f(X) + E
 \end{center}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org6be13f0}]{Dimensionality reduction}
+\begin{frame}[label={sec:orgd74e7df}]{Dimensionality reduction}
 \begin{block}{Problems when the number of features \(p\) becomes large}
 \begin{itemize}
 \item Bigger errors on test data (larger variance of predictions)
@@ -176,7 +176,7 @@ Y = f(X) + E
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orga6a7be0},fragile]{Toy example: linear regression with simulated data}
+\begin{frame}[label={sec:orgb7f57bb},fragile]{Toy example: linear regression with simulated data}
  \begin{itemize}
 \item Generate \(\X \in \R^{n \times 3}\), \(\mathbold{\bbeta} \in \R^3\), and \(\y = \X \, \bbeta \in R^n\)
 \item Append columns containing random noise to \(\X\)
@@ -187,7 +187,7 @@ Y = f(X) + E
 
 See \href{https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make\_regression.html\#sklearn.datasets.make\_regression}{\texttt{sklearn.datasets.make\_regression}} for generating data
 \end{frame}
-\begin{frame}[label={sec:org41d9d84}]{Model complexity: overfitting}
+\begin{frame}[label={sec:org717ec49}]{Model complexity: overfitting}
 \begin{itemize}
 \item Model complexity increases with dimension.
 \item Example: a linear model in dimension \(p\) can fit exactly (0 training error) any set of \(p + 1\) points.
@@ -198,7 +198,7 @@ See \href{https://scikit-learn.org/stable/modules/generated/sklearn.datasets.mak
 \includegraphics[height=.7\textheight]{figures/generated/ridge_overfitting/mse.pdf}
 \end{center}
 \end{frame}
-\begin{frame}[label={sec:orgf365c26}]{Cost of fitting many parameters}
+\begin{frame}[label={sec:org88e4a82}]{Cost of fitting many parameters}
 \begin{itemize}
 \item Many algorithms require polynomial time in \(p\)
 \item Implementations often make copies of the design matrix (\eg for centering \& rescaling)
@@ -208,40 +208,40 @@ See \href{https://scikit-learn.org/stable/modules/generated/sklearn.datasets.mak
 \end{center}
 \end{frame}
 \subsection{Univariate feature selection}
-\label{sec:org985704a}
-\begin{frame}[label={sec:org122101e}]{Univariate feature selection}
+\label{sec:orgbad5346}
+\begin{frame}[label={sec:org68f5a86}]{Univariate feature selection}
 \begin{itemize}
 \item \aka feature screening, filtering \ldots{}
 \item Check features (columns of \(\X\)) one by one for association with the output \(\y\)
 \item Keep only a fixed number or percentage of the features
 \end{itemize}
-\begin{block}{Simple (linear) association criteria}
+\begin{block}<2->{Simple (linear) association criteria}
 \begin{itemize}
 \item for regression: correlation
 \item for classification: ANalysis Of VAriance
 \end{itemize}
 \end{block}
-\begin{block}{Read more in the scikit-learn user guide}
+\begin{block}<2->{Read more in the scikit-learn user guide}
 \url{https://scikit-learn.org/stable/modules/feature\_selection.html\#feature-selection}
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:orgf2eb1b0}]{Univariate feature selection}
+\begin{frame}[label={sec:org6271f08}]{Univariate feature selection}
 Keeping only the 10 best features (most correlated with \(\y\))
 \begin{center}
 \includegraphics[height=.7\textheight]{figures/generated/ridge_overfitting/mse_with_dim_reduction.pdf}
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orgc9ce5ec}]{Same plot in log scale}
+\begin{frame}[label={sec:org0791f08}]{Same plot in log scale}
 \begin{center}
 \includegraphics[height=.7\textheight]{figures/generated/ridge_overfitting/mse_with_dim_reduction_log.pdf}
 \end{center}
 \end{frame}
 
 \subsection{Linear decomposition methods}
-\label{sec:orgbbd61cb}
-\begin{frame}[label={sec:org4a4d202}]{Linear decomposition methods}
+\label{sec:org1dc52c9}
+\begin{frame}[label={sec:org493cf02}]{Linear decomposition methods}
 \begin{block}{Maybe OK to drop \(\X_2\):}
 \vspace{-10pt}
 \begin{center}
@@ -257,7 +257,7 @@ Keeping only the 10 best features (most correlated with \(\y\))
 Find a better referential in which to represent the data
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org390b610}]{Linear regression: projection on the column space of \(X\)}
+\begin{frame}[label={sec:org89b8a8c}]{Linear regression: projection on the column space of \(X\)}
 \begin{structureenv} %% top
 \begin{columns}
 \begin{column}{.3\columnwidth}
@@ -283,7 +283,7 @@ Find a better referential in which to represent the data
 \end{itemize}
 \end{structureenv}
 \end{frame}
-\begin{frame}[label={sec:org3c99a6f}]{Linear decomposition: low-rank approximation of \(\X\)}
+\begin{frame}[label={sec:orgea8bf30}]{Linear decomposition: low-rank approximation of \(\X\)}
 Minimize
 \begin{equation}
 \| \X - \W \, \bH \|_{\F}^2 = \sum_{i, j} ( \X_{i,j} - (\W \, \bH)_{i,j})^2
@@ -292,7 +292,7 @@ Minimize
 \includegraphics[height=.5\textheight]{figures/generated/dim_reduction_colors/factorization_3.pdf}
 \end{center}
 \end{frame}
-\begin{frame}[label={sec:orgb56f213}]{Linear regression after dimensionality reduction}
+\begin{frame}[label={sec:org4b0f09a}]{Linear regression after dimensionality reduction}
 \begin{equation}
 \hat{\y} = \W \, \hat{\bbeta}
 \end{equation}
@@ -300,7 +300,7 @@ Minimize
 \includegraphics[height=.7\textheight]{figures/generated/dim_reduction_colors/regression_reduced_3.pdf}
 \end{center}
 \end{frame}
-\begin{frame}[label={sec:orgac330c6}]{Prediction for a new data point \(\x \in \R^{p}\)}
+\begin{frame}[label={sec:org51b2ba4}]{Prediction for a new data point \(\x \in \R^{p}\)}
 \begin{itemize}
 \item Find the combination of rows of \(\bH\) that is closest to \(\x\): regress \(\x\) on \(\bH^T\)
 \item Multiply by \(\hat{\bbeta}\)
@@ -309,7 +309,7 @@ Minimize
 \x \in \R^p \rightarrow \text{projection} \rightarrow \mathbold{w} \in \R^k \rightarrow \langle \cdot \, , \, \hat{\bbeta}\rangle \rightarrow \hat{y} \in \R
     \end{equation}
 \end{frame}
-\begin{frame}[label={sec:org2386c05}]{Principal Component Analysis}
+\begin{frame}[label={sec:org242ce3d}]{Principal Component Analysis}
 \begin{itemize}
 \item Matrix factorization based on Singular Value Decomposition:
 \end{itemize}
@@ -329,7 +329,7 @@ Truncating the SVD to keep only the first \(k\) components gives the best rank-\
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orge968557}]{Other decomposition methods}
+\begin{frame}[label={sec:org94d3f10}]{Other decomposition methods}
 Many other methods use the same objective (sum of squared reconstruction errors), but add penalties or constraints on the factors
 \begin{itemize}
 \item Dictionary Learning
@@ -345,7 +345,7 @@ Many other methods use the same objective (sum of squared reconstruction errors)
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org6ee4f75}]{Ridge regression and PCA}
+\begin{frame}[label={sec:orgda74191}]{Ridge regression and PCA}
 \begin{itemize}
 \item Both ridge regression and PC regression compute the coordinates of \(\y\) in the basis given by the SVD of \(\X\)
 \item ridge shrinks the coefficients of Singular Vector \(j\) by a factor \(\sigma_j^2 / (\sigma_j^2 + \lambda)\)
@@ -357,11 +357,11 @@ Many other methods use the same objective (sum of squared reconstruction errors)
 \end{center}
 \end{frame}
 \section{More on cross-validation}
-\label{sec:orge357a9b}
+\label{sec:org21ce77b}
 \subsection{More on cross-validation}
-\label{sec:org8aeb564}
+\label{sec:org945fd46}
 
-\begin{frame}[label={sec:org8bf626b}]{Setting hyperparameters}
+\begin{frame}[label={sec:org7cdb274}]{Setting hyperparameters}
 \begin{block}{How can we choose:}
 \begin{itemize}
 \item Number of features or PCA components \(k\)?
@@ -372,7 +372,7 @@ Try a few and pick the best one\ldots{}
 
 But measure its performance on separate data!
 \end{frame}
-\begin{frame}[label={sec:org2b155b8}]{Need for fresh test data}
+\begin{frame}[label={sec:org948def2}]{Need for fresh test data}
 When you hear "best", "maximum", "select", \ldots{} think "bias"
 \begin{itemize}
 \item I have 4 dice and want to find one that rolls high numbers
@@ -381,7 +381,7 @@ When you hear "best", "maximum", "select", \ldots{} think "bias"
 \item I need to roll it again to get an unbiased estimate
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgff64d20}]{Accuracy of the best model}
+\begin{frame}[label={sec:org8c0c5d9}]{Accuracy of the best model}
 \begin{itemize}
 \item Several models are trained, then evaluated on a separate test set
 \item All models give random answers -- expected accuracy is .5
@@ -391,15 +391,15 @@ When you hear "best", "maximum", "select", \ldots{} think "bias"
 \includegraphics[height=.5 \textheight]{figures/generated/hyperparameter_overfitting/accuracies.pdf}
 \end{center}
 \end{frame}
-\begin{frame}[label={sec:orgc992771}]{Nested cross-validation}
+\begin{frame}[label={sec:org5687060}]{Nested cross-validation}
 When you hear "best", "maximum", "select", \ldots{} think "bias"
-\begin{block}{Setting the parameters}
+\begin{block}<2->{Setting the parameters}
 \begin{itemize}
 \item \alert{Select} \(\bbeta\) that gives the \alert{best} prediction on training data
 \item The prediction score for \(\hat{\bbeta}\) is biased: compute a new score on unseen test data.
 \end{itemize}
 \end{block}
-\begin{block}{Setting the hyperparameters}
+\begin{block}<3->{Setting the hyperparameters}
 \begin{itemize}
 \item Repeat step 1 for a few values of \(\lambda\), \(k\), \etc., fitting and testing several models
 \item \alert{Select} the hyperparameter that obtains the \alert{best} prediction on test data
@@ -407,51 +407,52 @@ When you hear "best", "maximum", "select", \ldots{} think "bias"
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orge123826}]{One split}
+\begin{frame}[label={sec:org62d06f1}]{One split}
 \begin{center}
 \includegraphics[width=.9\linewidth]{figures/generated/train_eval_test/datasets.pdf}
 \end{center}
 \end{frame}
-\begin{frame}[label={sec:org59ef20d},fragile]{Nested cross-validation}
+\begin{frame}[label={sec:orgc1905b6},fragile]{Nested cross-validation}
  \begin{center}
 \includegraphics[width=.9\linewidth]{figures/generated/train_eval_test/cv.pdf}
 \end{center}
 see  \href{https://scikit-learn.org/stable/modules/generated/sklearn.model\_selection.GridSearchCV.html}{\texttt{sklearn.model\_selection.GridSearchCV}}
 \end{frame}
-\begin{frame}[label={sec:orgb47380a},fragile]{Some common pitfalls with cross-validation}
- \begin{itemize}
-\item Fitting part of the pipeline on the whole dataset
+\begin{frame}[label={sec:org77f6c1e},fragile]{Some common pitfalls with cross-validation}
+ \begin{block}<1->{Fitting part of the pipeline on the whole dataset}
 \begin{itemize}
 \item \eg fit PCA on all data, then do cross-validation on dim-reduced dataset
 \item use  \href{https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html}{\texttt{sklearn.pipeline.Pipeline}}
 \end{itemize}
-\item Ignoring dependencies between samples
+\end{block}
+\begin{block}<2->{Ignoring dependencies between samples}
 \begin{itemize}
 \item Multiple datapoints per participant
 \item Time series
-\item \ldots{}
 \end{itemize}
-\item Ignoring dependencies between CV scores
+\end{block}
+\begin{block}<3->{Ignoring dependencies between CV scores}
 \begin{itemize}
 \item Training sets overlap: cross-validation scores of different splits are not independent
 \end{itemize}
-\item Over-interpreting good CV scores
+\end{block}
+\begin{block}<4->{Over-interpreting good CV scores}
 \begin{itemize}
 \item Good CV scores on one dataset do not mean the model will always perform well on a new dataset
 \end{itemize}
-\end{itemize}
+\end{block}
 \end{frame}
 
 \section{Neuroimaging application: a task-fMRI decoding pipeline}
-\label{sec:org59876a1}
+\label{sec:orga0d7be9}
 \subsection{FMRI decoding}
-\label{sec:orgd978e45}
-\begin{frame}[label={sec:orge1a13d3}]{Supervised learning with fMRI}
+\label{sec:orgba874bc}
+\begin{frame}[label={sec:orgc0abd01}]{Supervised learning with fMRI}
 \begin{itemize}
 \item Predict in which site / with which scanner a resting-state fMRI sequence was acquired
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org87f32a1}]{The decoding pipeline}
+\begin{frame}[label={sec:org1ac5852}]{The decoding pipeline}
 \begin{itemize}
 \item Masking: extracting voxels that are inside the brain
 \item Connectivity: measuring correlations between brain regions to build a feature vector for each participant
@@ -459,6 +460,6 @@ see  \href{https://scikit-learn.org/stable/modules/generated/sklearn.model\_sele
 \item Classifier: logistic regression
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org83afe70}]{Implementation: in class}
+\begin{frame}[label={sec:org23096cf}]{Implementation: in class}
 \end{frame}
 \end{document}

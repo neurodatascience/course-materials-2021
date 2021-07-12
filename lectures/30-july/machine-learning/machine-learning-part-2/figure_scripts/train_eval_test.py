@@ -6,7 +6,7 @@ COLORS = [list(c[:3]) + [0.7] for c in TAB10_COLORS]
 
 fig, axes = plt.subplots(1, 3, figsize=(5, 1.2), gridspec_kw={"wspace": 0})
 
-titles = ["Train", "Evaluation", "Test"]
+titles = ["Train", "Validation", "Test"]
 descriptions = [
     r"""Choose $\beta(\lambda_i)$
 for each $\lambda_i$""",
@@ -32,7 +32,7 @@ def add_cv(fig, cv_gs):
             ax = fig.add_subplot(cv_gs[inner_split, fold])
             if fold == 2 - inner_split:
                 ax.set_facecolor(COLORS[1])
-                ax.text(.5, .5, "Eval", ha="center", va="center")
+                ax.text(.5, .5, "Valid.", ha="center", va="center")
             else:
                 ax.set_facecolor(COLORS[0])
                 ax.text(.5, .5, "Train", ha="center", va="center")
