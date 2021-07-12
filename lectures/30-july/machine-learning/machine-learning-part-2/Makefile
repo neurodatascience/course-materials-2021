@@ -4,11 +4,14 @@ all: presentation.pdf
 
 
 presentation.d: presentation.org
-	@sed -n -e '/^.*\[\[file:\(figures\/generated\/[^]]*\)\]\].*/{s//\1/;H};' \
+	@sed -n -e '/^.*\[\[file:\(figures\/\(generated\|graphs\)\/[^]]*\)\]\].*/{s//\1/;H};' \
 	-e '$${x;s/\n/ /g;s/\(.\+\)/figs := \1/p}' $< > $@
 	@ls figure_scripts/*.py | \
 		sed 's/\(figure_scripts\/\)\(.*\)\.py/figures\/generated\/\2\/%: \1\2.py figure_scripts\/config.py\n\tpython3 $$</' >> $@
 
+
+figures/graphs/%.pdf: figure_scripts/%.dot
+	figure_scripts/draw_graph.sh $< > $@
 
 clean:
 	rm -f presentation.pdf presentation.d

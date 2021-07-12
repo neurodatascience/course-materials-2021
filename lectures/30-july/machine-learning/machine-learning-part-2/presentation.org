@@ -161,9 +161,11 @@
 ** Intro
 *** Dimensionality reduction
 **** Until now
-\(\x\) \(\rightarrow\) linear or logistic regression \(\rightarrow\) \(\hat{\y}\)
+     #+ATTR_LATEX: :height .12 \textheight
+     [[file:figures/graphs/pipeline-1.pdf]]
 **** Add a step in the pipeline: simplifying the inputs
-\(\x\) \(\rightarrow\) dimensionality reduction \(\rightarrow\) linear or logistic regression \(\rightarrow\) \(\hat{\y}\)
+     #+ATTR_LATEX: :height .12 \textheight
+     [[file:figures/graphs/pipeline-2.pdf]]
 *** Dimensionality reduction
 **** Problems when the number of features \(p\) becomes large
      - Bigger errors on test data (larger variance of predictions)
@@ -249,7 +251,7 @@ Find a better referential in which to represent the data
       :BEAMER_env: column
       :BEAMER_col: .7
       :END:
-      \vspace{-17}
+      \vspace{-17pt}
       #+ATTR_LATEX: :height .7\textheight
       [[file:figures/generated/dim_reduction_colors/regression_full_3.pdf]]
 
@@ -330,6 +332,14 @@ Many other methods use the same objective (sum of squared reconstruction errors)
 - I roll them all once and select the die that gives the highest number
 - The selected die rolled a 5. Is 5 a good estimate of that die's average result? What if I had 1,000 dice?
 - I need to roll it again to get an unbiased estimate
+# #+ATTR_LATEX: :height .5 \textheight
+# [[file:figures/generated/regression_to_mean/dice_rolls.pdf]]
+*** Accuracy of the best model
+- Several models are trained, then evaluated on a separate test set
+- All models give random answers -- expected accuracy is .5
+- If I select the best one, its measured accuracy is biased ...
+#+ATTR_LATEX: :height .5 \textheight
+[[file:figures/generated/hyperparameter_overfitting/accuracies.pdf]]
 *** Nested cross-validation
 When you hear "best", "maximum", "select", ... think "bias"
 **** Setting the parameters

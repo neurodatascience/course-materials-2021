@@ -1,4 +1,4 @@
-% Created 2021-07-09 Fri 16:36
+% Created 2021-07-12 Mon 13:52
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,mathserif,table]{beamer}
 \usepackage[utf8]{inputenc}
@@ -82,27 +82,27 @@
 \setbeamercolor*{block title example}{fg=black,bg=white}
 \setbeamercolor*{block body example}{fg=black,bg=white}
 \usetheme{default}
-\author{jerome dockes}
+\author{Jerome Dockes}
 \date{}
 \title{Machine learning Part 2}
 \author{Jérôme Dockès}
 \titlegraphic{\includegraphics[height=1.5cm]{figures/mcgill-university.png} \hspace{1.5cm} \includegraphics[height=1.5cm]{figures/origami-lab-logo.png}}
 \date{QLS course 2021-07-30}
 \hypersetup{
- pdfauthor={jerome dockes},
+ pdfauthor={Jerome Dockes},
  pdftitle={Machine learning Part 2},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 26.3 (Org mode 9.1.9)}, 
+ pdfcreator={Emacs 26.3 (Org mode 9.3.7)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
 \section{Intro}
-\label{sec:orgbbb9480}
+\label{sec:org874f5d8}
 \subsection{Recap of part 1}
-\label{sec:org3d64d2d}
-\begin{frame}[label={sec:orgdcd8051}]{Recap of part 1}
+\label{sec:org9ab7a94}
+\begin{frame}[label={sec:org70ead5b}]{Recap of part 1}
 \begin{block}{Supervised learning}
 \begin{itemize}
 \item Regression: least-squares linear regression
@@ -129,7 +129,7 @@
 Don't remember? watch Part 1 again!
 \end{structureenv}
 \end{frame}
-\begin{frame}[label={sec:org4f76068}]{Notation \& vocabulary}
+\begin{frame}[label={sec:orgea9fbea}]{Notation \& vocabulary}
 \begin{block}{Supervised learning framework}
 \begin{equation}
 Y = f(X) + E
@@ -152,18 +152,22 @@ Y = f(X) + E
 \end{block}
 \end{frame}
 \section{Dimensionality reduction}
-\label{sec:org6ec2583}
+\label{sec:orga6da4dc}
 \subsection{Intro}
-\label{sec:org4192f85}
-\begin{frame}[label={sec:orgb608ffa}]{Dimensionality reduction}
+\label{sec:orgda6fcca}
+\begin{frame}[label={sec:org17e244a}]{Dimensionality reduction}
 \begin{block}{Until now}
-\(\x\) \(\rightarrow\) linear or logistic regression \(\rightarrow\) \(\hat{\y}\)
+\begin{center}
+\includegraphics[height=.12 \textheight]{figures/graphs/pipeline-1.pdf}
+\end{center}
 \end{block}
 \begin{block}{Add a step in the pipeline: simplifying the inputs}
-\(\x\) \(\rightarrow\) dimensionality reduction \(\rightarrow\) linear or logistic regression \(\rightarrow\) \(\hat{\y}\)
+\begin{center}
+\includegraphics[height=.12 \textheight]{figures/graphs/pipeline-2.pdf}
+\end{center}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org34bcd05}]{Dimensionality reduction}
+\begin{frame}[label={sec:org67d49d0}]{Dimensionality reduction}
 \begin{block}{Problems when the number of features \(p\) becomes large}
 \begin{itemize}
 \item Bigger errors on test data (larger variance of predictions)
@@ -172,7 +176,7 @@ Y = f(X) + E
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[fragile,label={sec:org8d681e8}]{Toy example: linear regression with simulated data}
+\begin{frame}[label={sec:org2ba1cce},fragile]{Toy example: linear regression with simulated data}
  \begin{itemize}
 \item Generate \(\X \in \R^{n \times 3}\), \(\mathbold{\bbeta} \in \R^3\), and \(\y = \X \, \bbeta \in R^n\)
 \item Append columns containing random noise to \(\X\)
@@ -183,7 +187,7 @@ Y = f(X) + E
 
 See \href{https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make\_regression.html\#sklearn.datasets.make\_regression}{\texttt{sklearn.datasets.make\_regression}} for generating data
 \end{frame}
-\begin{frame}[label={sec:orgd0bfa2e}]{Model complexity: overfitting}
+\begin{frame}[label={sec:orgf36639b}]{Model complexity: overfitting}
 \begin{itemize}
 \item Model complexity increases with dimension.
 \item Example: a linear model in dimension \(p\) can fit exactly (0 training error) any set of \(p + 1\) points.
@@ -194,7 +198,7 @@ See \href{https://scikit-learn.org/stable/modules/generated/sklearn.datasets.mak
 \includegraphics[height=.7\textheight]{figures/generated/ridge_overfitting/mse.pdf}
 \end{center}
 \end{frame}
-\begin{frame}[label={sec:orga3e9dbf}]{Cost of fitting many parameters}
+\begin{frame}[label={sec:org0a28cfc}]{Cost of fitting many parameters}
 \begin{itemize}
 \item Many algorithms require polynomial time in \(p\)
 \item Implementations often make copies of the design matrix (\eg for centering \& rescaling)
@@ -204,8 +208,8 @@ See \href{https://scikit-learn.org/stable/modules/generated/sklearn.datasets.mak
 \end{center}
 \end{frame}
 \subsection{Univariate feature selection}
-\label{sec:org0c88d4d}
-\begin{frame}[label={sec:org69ffcae}]{Univariate feature selection}
+\label{sec:orgde68e16}
+\begin{frame}[label={sec:org0975f0c}]{Univariate feature selection}
 \begin{itemize}
 \item \aka feature screening, filtering \ldots{}
 \item Check features (columns of \(\X\)) one by one for association with the output \(\y\)
@@ -222,22 +226,22 @@ See \href{https://scikit-learn.org/stable/modules/generated/sklearn.datasets.mak
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org7f1e844}]{Univariate feature selection}
+\begin{frame}[label={sec:org8479c9e}]{Univariate feature selection}
 Keeping only the 10 best features (most correlated with \(\y\))
 \begin{center}
 \includegraphics[height=.7\textheight]{figures/generated/ridge_overfitting/mse_with_dim_reduction.pdf}
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org548c1b3}]{Same plot in log scale}
+\begin{frame}[label={sec:org8b0004b}]{Same plot in log scale}
 \begin{center}
 \includegraphics[height=.7\textheight]{figures/generated/ridge_overfitting/mse_with_dim_reduction_log.pdf}
 \end{center}
 \end{frame}
 
 \subsection{Linear decomposition methods}
-\label{sec:orgf73ab21}
-\begin{frame}[label={sec:org85caf58}]{Linear decomposition methods}
+\label{sec:orgd74c3f9}
+\begin{frame}[label={sec:org47c3d06}]{Linear decomposition methods}
 \begin{block}{Maybe OK to drop \(\X_2\):}
 \vspace{-10pt}
 \begin{center}
@@ -253,7 +257,7 @@ Keeping only the 10 best features (most correlated with \(\y\))
 Find a better referential in which to represent the data
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org47eec78}]{Linear regression: projection on the column space of \(X\)}
+\begin{frame}[label={sec:orgee77ef6}]{Linear regression: projection on the column space of \(X\)}
 \begin{structureenv} %% top
 \begin{columns}
 \begin{column}{.3\columnwidth}
@@ -263,7 +267,7 @@ Find a better referential in which to represent the data
 \end{column}
 
 \begin{column}{.7\columnwidth}
-\vspace{-17}
+\vspace{-17pt}
 \begin{center}
 \includegraphics[height=.7\textheight]{figures/generated/dim_reduction_colors/regression_full_3.pdf}
 \end{center}
@@ -279,7 +283,7 @@ Find a better referential in which to represent the data
 \end{itemize}
 \end{structureenv}
 \end{frame}
-\begin{frame}[label={sec:orgf049ee4}]{Linear decomposition: low-rank approximation of \(\X\)}
+\begin{frame}[label={sec:org6833ec1}]{Linear decomposition: low-rank approximation of \(\X\)}
 Minimize
 \begin{equation}
 \| \X - \W \, \bH \|_{\F}^2 = \sum_{i, j} ( \X_{i,j} - (\W \, \bH)_{i,j})^2
@@ -288,7 +292,7 @@ Minimize
 \includegraphics[height=.5\textheight]{figures/generated/dim_reduction_colors/factorization_3.pdf}
 \end{center}
 \end{frame}
-\begin{frame}[label={sec:org69520ef}]{Linear regression after dimensionality reduction}
+\begin{frame}[label={sec:org1c99127}]{Linear regression after dimensionality reduction}
 \begin{equation}
 \hat{\y} = \W \, \hat{\bbeta}
 \end{equation}
@@ -296,7 +300,7 @@ Minimize
 \includegraphics[height=.7\textheight]{figures/generated/dim_reduction_colors/regression_reduced_3.pdf}
 \end{center}
 \end{frame}
-\begin{frame}[label={sec:orgbf53fc6}]{Prediction for a new data point \(\x \in \R^{p}\)}
+\begin{frame}[label={sec:orgcdac585}]{Prediction for a new data point \(\x \in \R^{p}\)}
 \begin{itemize}
 \item Find the combination of rows of \(\bH\) that is closest to \(\x\): regress \(\x\) on \(\bH^T\)
 \item Multiply by \(\hat{\bbeta}\)
@@ -305,7 +309,7 @@ Minimize
 \x \in \R^p \rightarrow \text{projection} \rightarrow \mathbold{w} \in \R^k \rightarrow \langle \cdot \, , \, \hat{\bbeta}\rangle \rightarrow \hat{y} \in \R
     \end{equation}
 \end{frame}
-\begin{frame}[label={sec:orgfad8d9f}]{Principal Component Analysis}
+\begin{frame}[label={sec:orge38a306}]{Principal Component Analysis}
 \begin{itemize}
 \item Matrix factorization based on Singular Value Decomposition:
 \end{itemize}
@@ -325,7 +329,7 @@ Truncating the SVD to keep only the first \(k\) components gives the best rank-\
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org3759600}]{Other decomposition methods}
+\begin{frame}[label={sec:org3b1b629}]{Other decomposition methods}
 Many other methods use the same objective (sum of squared reconstruction errors), but add penalties or constraints on the factors
 \begin{itemize}
 \item Dictionary Learning
@@ -341,7 +345,7 @@ Many other methods use the same objective (sum of squared reconstruction errors)
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orga895cd9}]{Ridge regression and PCA}
+\begin{frame}[label={sec:org20a9ca6}]{Ridge regression and PCA}
 \begin{itemize}
 \item Both ridge regression and PC regression compute the coordinates of \(\y\) in the basis given by the SVD of \(\X\)
 \item ridge shrinks the coefficients of Singular Vector \(j\) by a factor \(\sigma_j^2 / (\sigma_j^2 + \lambda)\)
@@ -353,11 +357,11 @@ Many other methods use the same objective (sum of squared reconstruction errors)
 \end{center}
 \end{frame}
 \section{More on cross-validation}
-\label{sec:org0df04b1}
+\label{sec:org348f336}
 \subsection{More on cross-validation}
-\label{sec:org9dd3279}
+\label{sec:org3f6a510}
 
-\begin{frame}[label={sec:orge645531}]{Setting hyperparameters}
+\begin{frame}[label={sec:org7ed82c3}]{Setting hyperparameters}
 \begin{block}{How can we choose:}
 \begin{itemize}
 \item Number of features or PCA components \(k\)?
@@ -368,7 +372,7 @@ Try a few and pick the best one\ldots{}
 
 But measure its performance on separate data!
 \end{frame}
-\begin{frame}[label={sec:orgbf52718}]{Need for fresh test data}
+\begin{frame}[label={sec:orgeac8955}]{Need for fresh test data}
 When you hear "best", "maximum", "select", \ldots{} think "bias"
 \begin{itemize}
 \item I have 4 dice and want to find one that rolls high numbers
@@ -377,7 +381,17 @@ When you hear "best", "maximum", "select", \ldots{} think "bias"
 \item I need to roll it again to get an unbiased estimate
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org4aa753c}]{Nested cross-validation}
+\begin{frame}[label={sec:orgd083ac6}]{Accuracy of the best model}
+\begin{itemize}
+\item Several models are trained, then evaluated on a separate test set
+\item All models give random answers -- expected accuracy is .5
+\item If I select the best one, its measured accuracy is biased \ldots{}
+\end{itemize}
+\begin{center}
+\includegraphics[height=.5 \textheight]{figures/generated/hyperparameter_overfitting/accuracies.pdf}
+\end{center}
+\end{frame}
+\begin{frame}[label={sec:org255f3e7}]{Nested cross-validation}
 When you hear "best", "maximum", "select", \ldots{} think "bias"
 \begin{block}{Setting the parameters}
 \begin{itemize}
@@ -393,7 +407,7 @@ When you hear "best", "maximum", "select", \ldots{} think "bias"
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org9620725}]{Some common pitfalls with cross-validation}
+\begin{frame}[label={sec:orge1628f4}]{Some common pitfalls with cross-validation}
 \begin{itemize}
 \item Ignoring dependencies between samples
 \begin{itemize}
@@ -413,15 +427,15 @@ When you hear "best", "maximum", "select", \ldots{} think "bias"
 \end{frame}
 
 \section{Neuroimaging application: a task-fMRI decoding pipeline}
-\label{sec:orgffd70b7}
+\label{sec:orgac4c6ab}
 \subsection{FMRI decoding}
-\label{sec:org76b1133}
-\begin{frame}[label={sec:orgae460be}]{Supervised learning with fMRI}
+\label{sec:org6c57488}
+\begin{frame}[label={sec:orgd39a506}]{Supervised learning with fMRI}
 \begin{itemize}
 \item Predict in which site / with which scanner a resting-state fMRI sequence was acquired
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgeee3c69}]{The decoding pipeline}
+\begin{frame}[label={sec:org08fbc6a}]{The decoding pipeline}
 \begin{itemize}
 \item Masking: extracting voxels that are inside the brain
 \item Connectivity: measuring correlations between brain regions to build a feature vector for each participant
@@ -429,6 +443,6 @@ When you hear "best", "maximum", "select", \ldots{} think "bias"
 \item Classifier: logistic regression
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org310b45a}]{Implementation: in class}
+\begin{frame}[label={sec:orgc6df758}]{Implementation: in class}
 \end{frame}
 \end{document}
