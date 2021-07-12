@@ -349,7 +349,15 @@ When you hear "best", "maximum", "select", ... think "bias"
      - Repeat step 1 for a few values of \(\lambda\), \(k\), \etc., fitting and testing several models
      - *Select* the hyperparameter that obtains the *best* prediction on test data
      - The prediction score of that model on /test/ data is biased: evaluate it again on unseen data
+*** One split
+[[file:figures/generated/train_eval_test/datasets.pdf]]
+*** Nested cross-validation
+[[file:figures/generated/train_eval_test/cv.pdf]]
+see  [[https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html][=sklearn.model_selection.GridSearchCV=]]
 *** Some common pitfalls with cross-validation
+    - Fitting part of the pipeline on the whole dataset
+      - \eg fit PCA on all data, then do cross-validation on dim-reduced dataset
+      - use  [[https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html][=sklearn.pipeline.Pipeline=]]
     - Ignoring dependencies between samples
       - Multiple datapoints per participant
       - Time series
