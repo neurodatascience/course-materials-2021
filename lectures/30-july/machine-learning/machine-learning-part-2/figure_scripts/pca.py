@@ -34,7 +34,10 @@ X += X_mean
 U, S, Vh = svd(X - X.mean(axis=0))
 show_cloud(X, TAB10_COLORS[1], ax)
 v_len = 20
-ax.plot(*(np.asarray([X_mean - Vh[0] * v_len, X_mean + Vh[0] * v_len]).T), color="k")
+ax.plot(
+    *(np.asarray([X_mean - Vh[0] * v_len, X_mean + Vh[0] * v_len]).T),
+    color="k"
+)
 
 fig.savefig(str(FIGURES_DIR / "cloud_not_aligned.pdf"), bbox_inches="tight")
 plt.close("all")
@@ -42,9 +45,13 @@ plt.close("all")
 fig, ax = plt.subplots(figsize=FIGSIZE)
 show_cloud(X, "gray", ax)
 v_len = 10
-ax.plot(*(np.asarray([X_mean, X_mean + Vh[0] * v_len]).T), color=TAB10_COLORS[0])
-ax.plot(*(np.asarray([X_mean, X_mean + Vh[1] * v_len]).T), color=TAB10_COLORS[1])
-ax.legend(["PC 1", "PC 2"], frameon=False, handlelength=1.)
+ax.plot(
+    *(np.asarray([X_mean, X_mean + Vh[0] * v_len]).T), color=TAB10_COLORS[0]
+)
+ax.plot(
+    *(np.asarray([X_mean, X_mean + Vh[1] * v_len]).T), color=TAB10_COLORS[1]
+)
+ax.legend([r"$\V_1$", r"$\V_2$"], frameon=False, handlelength=1.0)
 
 fig.savefig(
     str(FIGURES_DIR / "cloud_not_aligned_with_pc.pdf"), bbox_inches="tight"

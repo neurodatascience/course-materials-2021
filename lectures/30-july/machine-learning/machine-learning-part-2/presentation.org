@@ -84,6 +84,7 @@
     #+LaTex_HEADER: \newcommand{\etc}{\emph{etc.}\,}
 
     #+LaTex_HEADER: \newcommand{\X}{{\mathbold X}}
+    #+LaTex_HEADER: \newcommand{\bS}{{\mathbold S}}
     #+LaTex_HEADER: \newcommand{\bSigma}{{\mathbold \Sigma}}
     #+LaTex_HEADER: \newcommand{\x}{{\mathbold x}}
     #+LaTex_HEADER: \newcommand{\bbeta}{{\mathbold \beta}}
@@ -125,6 +126,15 @@
 ** Recap of part 1
 *** Recap of part 1
 **** Supervised learning
+       - Regression: least-squares linear regression
+       - Classification: logistic regression
+#+ATTR_LATEX: :height .4 \textheight :center
+[[file:figures/generated/linear_regression_1d/linear_regression.pdf]]
+#+ATTR_LATEX: :height .4 \textheight :center
+[[file:figures/generated/logistic_regression_1d/logistic_regression.pdf]]
+
+*** Recap of part 1
+**** Supervised learning
      :PROPERTIES:
      :BEAMER_act: <1->
      :END:
@@ -132,12 +142,12 @@
        - Classification: logistic regression
 **** Regularization
      :PROPERTIES:
-     :BEAMER_act: <2->
+     :BEAMER_act: <1->
      :END:
        - \(\ell_2\) \aka ridge regularization
 **** Model evaluation and selection
      :PROPERTIES:
-     :BEAMER_act: <3->
+     :BEAMER_act: <2->
      :END:
        - Out-of-sample generalization; independent test set
        - Performance metrics:
@@ -146,7 +156,7 @@
        - Cross-validation
 ****  
      :PROPERTIES:
-     :BEAMER_act: <4->
+     :BEAMER_act: <3->
      :END:
   Don't remember? watch Part 1 again!
 *** Notation & vocabulary
@@ -220,6 +230,17 @@ See [[https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_re
      :BEAMER_act: <2->
      :END:
  https://scikit-learn.org/stable/modules/feature_selection.html#feature-selection
+
+*** Simple selection criteria
+
+- Regression: correlation
+
+#+ATTR_LATEX: :height .4 \textheight
+[[file:figures/generated/univariate_selection/regression.pdf]]
+- Classification: ANOVA
+\vspace{-2pt}
+#+ATTR_LATEX: :height .4 \textheight
+[[file:figures/generated/univariate_selection/classification.pdf]]
 
 *** Univariate feature selection
     Keeping only the 10 best features (most correlated with \(\y\))
@@ -301,18 +322,61 @@ Find a better referential in which to represent the data
 \x \in \R^p \rightarrow \text{projection} \rightarrow \mathbold{w} \in \R^k \rightarrow \langle \cdot \, , \, \hat{\bbeta}\rangle \rightarrow \hat{y} \in \R
     \end{equation}
 *** Principal Component Analysis
-    - Matrix factorization based on Singular Value Decomposition:
+    - Singular Value Decomposition of \(\X\):
     \begin{equation}
-    \X = \U \, \bSigma \, \V^T
+    \X = \U \, \bS \, \V^T
     \end{equation}
-    with \(\X \in \R^{n \times p}\), \(\U \in \R^{n \times p}\), \(\bSigma \in \R^{p \times p}\), \(\V \in \R^{p \times p}\)
-    - \(\bSigma \succeq 0\) diagonal with decreasing values \(\bSigma_{j,j}\) along the diagonal
-    - \(\U^T\, \U = I_p\)
-    - \(\V^T\, \V = I_p\)
+    with \(\X \in \R^{n \times p}\), \(\U \in \R^{n \times r}\), \(\bS \in \R^{r \times r}\), \(\V \in \R^{r \times p}\)
+    - \(r = \min(n, p)\)
+    - \(\bS \succeq 0\) diagonal with decreasing values \(s_j\) along the diagonal
+    - \(\U^T\, \U = I_r\)
+    - \(\V^T\, \V = I_r\)
 
 Truncating the SVD to keep only the first \(k\) components gives the best rank-\(k\) approximation of \(\X\)
 #+ATTR_LATEX: :height .3\textheight
 [[file:figures/generated/pca/cloud_not_aligned_with_pc.pdf]]
+*** Singular Value Decomposition
+\begin{equation}
+\X = \U \, \bS \, \V^T
+\end{equation}
+#+ATTR_LATEX: :height .5 \textheight :center
+[[file:figures/generated/pca_step_by_step/pca_steps_1.pdf]]
+
+\begin{equation}
+\U^T \, \U = I_p
+\end{equation}
+\begin{equation}
+\V^T \, \V = I_p
+\end{equation}
+
+*** Singular Value Decomposition
+\begin{equation}
+\X = \U \, \bS \, \V^T
+\end{equation}
+#+ATTR_LATEX: :height .5 \textheight :center
+[[file:figures/generated/pca_step_by_step/pca_steps_2.pdf]]
+
+\begin{equation}
+\U^T \, \U = I_p
+\end{equation}
+\begin{equation}
+\V^T \, \V = I_p
+\end{equation}
+
+
+*** Singular Value Decomposition
+\begin{equation}
+\X = \U \, \bS \, \V^T
+\end{equation}
+#+ATTR_LATEX: :height .5 \textheight :center
+[[file:figures/generated/pca_step_by_step/pca_steps_3.pdf]]
+
+\begin{equation}
+\U^T \, \U = I_p
+\end{equation}
+\begin{equation}
+\V^T \, \V = I_p
+\end{equation}
 
 *** Other decomposition methods
 Many other methods use the same objective (sum of squared reconstruction errors), but add penalties or constraints on the factors
@@ -326,8 +390,8 @@ Many other methods use the same objective (sum of squared reconstruction errors)
      - Some other methods take it into account: \eg Partial Least Squares
 *** Ridge regression and PCA
     - Both ridge regression and PC regression compute the coordinates of \(\y\) in the basis given by the SVD of \(\X\)
-    - ridge shrinks the coefficients of Singular Vector \(j\) by a factor \(\sigma_j^2 / (\sigma_j^2 + \lambda)\)
-    - PC regression sets the coefficient to 0 for all but the \(k\) largest \(\sigma_j\)
+    - Ridge shrinks the coordinate along \(\U_j\) by a factor \(s_j^2 / (s_j^2 + \lambda)\)
+    - PC regression sets the coordinates to 0 except for those corresponding to the \(k\) largest \(s_j\): shrinks by a factor \(\mathbold{1}_{\{j \leq k\}}\)
 
 #+ATTR_LATEX: :height .6\textheight
 [[file:figures/generated/dim_reduction_colors/regression_reduced_3_svd.pdf]]
@@ -351,9 +415,9 @@ Many other methods use the same objective (sum of squared reconstruction errors)
 - I roll them all once and select the die that gives the highest number
 - The selected die rolled a 5. Is 5 a good estimate of that die's average result? What if I had 1,000 dice?
 - I need to roll it again to get an unbiased estimate
-# #+ATTR_LATEX: :height .5 \textheight
-# [[file:figures/generated/regression_to_mean/dice_rolls.pdf]]
-*** Accuracy of the best model
+#+ATTR_LATEX: :height .5 \textheight
+[[file:figures/generated/regression_to_mean/dice_rolls.pdf]]
+*** COMMENT Accuracy of the best model
 - Several models are trained, then evaluated on a separate test set
 - All models give random answers -- expected accuracy is .5
 - If I select the best one, its measured accuracy is biased ...
