@@ -180,6 +180,17 @@
 & = & \beta_0 + \sum_{j=1}^p X_j \, \beta_j + E
  \end{IEEEeqnarray}
 "learning" = estimating \(\beta_0 \in \R\) and \(\beta \in \R^p\)
+*** How to estimate parameters: Empirical Risk Minimization
+Given training examples \(\X\), \(\y\),
+
+find \(\hat{\beta}_0, \hat{\bbeta}\)
+
+that minimize the empirical risk:
+\begin{equation}
+\| \y - \hat{\y} \|_2^2 = \| \y - \hat{\beta}_0 - \X \, \hat{\bbeta} \|_2^2
+\end{equation}
+
+"Fitting" the parameters to \(\X, \y\).
 * Dimensionality reduction
 ** Intro
 *** Dimensionality reduction
@@ -215,7 +226,7 @@ See [[https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_re
     #+ATTR_LATEX: :height .7\textheight
     [[file:figures/generated/ridge_overfitting/durations.pdf]]
 ** Univariate feature selection
-*** Univariate feature selection
+*** Solution 1: univariate feature selection
     - \aka feature screening, filtering ...
     - Check features (columns of \(\X\)) one by one for association with the output \(\y\)
     - Keep only a fixed number or percentage of the features
@@ -252,7 +263,7 @@ See [[https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_re
     [[file:figures/generated/ridge_overfitting/mse_with_dim_reduction_log.pdf]]
 
 ** Linear decomposition methods
-*** Linear decomposition methods
+*** Solution 2: linear decomposition methods
 **** Maybe OK to drop $\X_2$:
      \vspace{-10pt}
      #+ATTR_LATEX: :height .3\textheight
