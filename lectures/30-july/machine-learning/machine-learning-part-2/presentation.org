@@ -467,13 +467,25 @@ see  [[https://scikit-learn.org/stable/modules/generated/sklearn.model_selection
      :END:
          + Good CV scores on one dataset do not mean the model will always perform well on a new dataset
 
+*** Split choice example: time series
+Which is easier?
+#+ATTR_LATEX: :height .4 \textheight
+[[file:figures/generated/time_series_cv/kfold.pdf]]
+
+#+ATTR_LATEX: :height .4 \textheight
+[[file:figures/generated/time_series_cv/kfold_shuffled.pdf]]
+*** Remember that CV training sets overlap
+    #+ATTR_LATEX: :height .6 \textheight
+[[file:figures/generated/train_eval_test/cv_not_nested.pdf]]
+
+So the scores are not independent! Their variance can be underestimated.
 *** COMMENT Two sources of variance: training data and test sample
     Don't use Leave-One-Out Cross-validation
-* Neuroimaging application: a task-fMRI decoding pipeline
+* Neuroimaging application: a task-fMRI prediction pipeline
 ** FMRI decoding
 *** Supervised learning with fMRI
     - Predict in which site / with which scanner a resting-state fMRI sequence was acquired
-*** The decoding pipeline
+*** The prediction pipeline
     - Masking: extracting voxels that are inside the brain
     - Connectivity: measuring correlations between brain regions to build a feature vector for each participant
     - Univariate feature selection with ANalysis Of VAriance

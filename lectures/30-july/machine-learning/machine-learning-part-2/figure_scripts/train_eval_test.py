@@ -26,13 +26,13 @@ fig.savefig(FIGURES_DIR / "datasets.pdf", bbox_inches="tight")
 plt.close("all")
 
 
-def add_cv(fig, cv_gs):
+def add_cv(fig, cv_gs, test_name="Valid."):
     for inner_split in range(3):
         for fold in range(3):
             ax = fig.add_subplot(cv_gs[inner_split, fold])
             if fold == 2 - inner_split:
                 ax.set_facecolor(COLORS[1])
-                ax.text(.5, .5, "Valid.", ha="center", va="center")
+                ax.text(.5, .5, test_name, ha="center", va="center")
             else:
                 ax.set_facecolor(COLORS[0])
                 ax.text(.5, .5, "Train", ha="center", va="center")
@@ -59,3 +59,13 @@ for ax in fig.axes:
     ax.set_yticks([])
 
 fig.savefig(FIGURES_DIR / "cv.pdf", bbox_inches="tight")
+
+plt.close("all")
+
+fig = plt.figure(figsize=(3, 1.5))
+gs = fig.add_gridspec(3, 3, wspace=.1)
+add_cv(fig, gs, "Test")
+for ax in fig.axes:
+    ax.set_xticks([])
+    ax.set_yticks([])
+fig.savefig(FIGURES_DIR / "cv_not_nested.pdf", bbox_inches="tight")
