@@ -10,9 +10,10 @@
    #+TITLE: Machine learning Part 2
    # #+AUTHOR: Jérôme Dockès
 
-   #+BEAMER_HEADER: \author{Jérôme Dockès}
+   #+BEAMER_HEADER: \author{Jérôme Dockès \& Nikhil Bhagwat}
    #+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{figures/mcgill-university.png} \hspace{1.5cm} \includegraphics[height=1.5cm]{figures/origami-lab-logo.png}}
    #+BEAMER_HEADER: \date{QLS course 2021-07-30}
+   #+BEAMER_HEADER: \subtitle{Dimensionality reduction \& cross-validation}
 
 ** latex headers
 *** fonts and beamer
@@ -181,14 +182,15 @@
  \end{IEEEeqnarray}
 "learning" = estimating \(\beta_0 \in \R\) and \(\beta \in \R^p\)
 *** How to estimate parameters: Empirical Risk Minimization
-Given training examples \(\X\), \(\y\),
+Given \(n\) training examples \(\X \in \R^{n \times p}\), \(\y \in \R^n\),
 
-find \(\hat{\beta}_0, \hat{\bbeta}\)
+find \(\hat{\beta}_0 \in \R, \hat{\bbeta} \in \R^p\)
 
 that minimize the empirical risk:
-\begin{equation}
-\| \y - \hat{\y} \|_2^2 = \| \y - \hat{\beta}_0 - \X \, \hat{\bbeta} \|_2^2
-\end{equation}
+\begin{IEEEeqnarray}{rcl}
+\| \y - \hat{\y} \|_2^2 & \; = \; & \| \y - \hat{\beta}_0 - \X \, \hat{\bbeta} \|_2^2 \\
+& \; = \; & \sum_{i=1}^n (\y_i - \hat{\beta}_0 - \sum_{j=1}^p \X_{ij}\, \hat{\bbeta}_j )^2
+\end{IEEEeqnarray}
 
 "Fitting" the parameters to \(\X, \y\).
 * Dimensionality reduction
@@ -201,18 +203,23 @@ that minimize the empirical risk:
      #+ATTR_LATEX: :height .12 \textheight
      [[file:figures/graphs/pipeline-2.pdf]]
 *** Dimensionality reduction
+    \begin{equation}
+    \hat{\y} = \hat{\beta}_0 + \hat{\bbeta}_1 \, \X_{:, 1} + \hat{\bbeta}_2 \, \X_{:, 1} + \dots + \hat{\bbeta}_p \, \X_{:, p}
+    \end{equation}
 **** Problems when the number of features \(p\) becomes large
      - Bigger errors on test data (larger variance of predictions)
      - Numerical stability issues
      - Computational cost and memory usage
-*** Toy example: linear regression with simulated data
+*** Simulated data for linear regression
     - Generate \(\X \in \R^{n \times 3}\), \(\mathbold{\bbeta} \in \R^3\), and \(\y = \X \, \bbeta \in R^n\)
     - Append columns containing random noise to \(\X\)
     - Now \(\X \in \R^{n \times p}\), with \(p \geq 3\), but only the first 3 columns are linked with \(\y\)
     - Split into training and testing tests and evaluate a linear regression model: what happens when \(p\) becomes large?
-  \vfill
+  # \vfill
 
 See [[https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression][=sklearn.datasets.make_regression=]] for generating data
+#+ATTR_LATEX: :height .4 \textheight
+[[file:figures/generated/show_make_regression/x_construction.pdf]]
 *** Model complexity: overfitting
     - Model complexity increases with dimension.
     - Example: a linear model in dimension \(p\) can fit exactly (0 training error) any set of \(p + 1\) points.
@@ -220,11 +227,16 @@ See [[https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_re
 
     #+ATTR_LATEX: :height .7\textheight
     [[file:figures/generated/ridge_overfitting/mse.pdf]]
+*** Same plot in log scale
+    #+ATTR_LATEX: :height .7\textheight
+    [[file:figures/generated/ridge_overfitting/mse_log.pdf]]
+
 *** Cost of fitting many parameters
     - Many algorithms require polynomial time in \(p\)
     - Implementations often make copies of the design matrix (\eg for centering & rescaling)
     #+ATTR_LATEX: :height .7\textheight
     [[file:figures/generated/ridge_overfitting/durations.pdf]]
+    # in the example, solved with cholesky decomposition so complexity is O(p^3) (cholesky) + O(np^2) (X^T X)
 ** Univariate feature selection
 *** Solution 1: univariate feature selection
     - \aka feature screening, filtering ...

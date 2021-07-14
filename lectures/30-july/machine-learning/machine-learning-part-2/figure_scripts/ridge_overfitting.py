@@ -99,6 +99,8 @@ ax.set_title(
 )
 
 fig.savefig(FIGURES_DIR / "mse.pdf", bbox_inches="tight")
+ax.set_yscale("log")
+fig.savefig(FIGURES_DIR / "mse_log.pdf", bbox_inches="tight")
 ax.plot(dimensions, train_scores_select, linestyle="--", color=TAB10_COLORS[1])
 ax.plot(dimensions, test_scores_select, color=TAB10_COLORS[1])
 ax.legend(
