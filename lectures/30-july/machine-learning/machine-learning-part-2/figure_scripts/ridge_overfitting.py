@@ -112,6 +112,7 @@ ax.legend(
     ],
     frameon=False,
 )
+ax.set_yscale("linear")
 fig.savefig(FIGURES_DIR / "mse_with_dim_reduction.pdf", bbox_inches="tight")
 ax.set_yscale("log")
 fig.savefig(

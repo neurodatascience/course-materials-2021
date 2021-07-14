@@ -211,7 +211,7 @@ that minimize the empirical risk:
      - Numerical stability issues
      - Computational cost and memory usage
 *** Simulated data for linear regression
-    - Generate \(\X \in \R^{n \times 3}\), \(\mathbold{\bbeta} \in \R^3\), and \(\y = \X \, \bbeta \in R^n\)
+    - Generate \(\X \in \R^{n \times 3}\), \(\mathbold{\bbeta} \in \R^3\), \(\mathbold{e} \in \R^n\) and \(\y = \X \, \bbeta + \mathbold{e} \in R^n\)
     - Append columns containing random noise to \(\X\)
     - Now \(\X \in \R^{n \times p}\), with \(p \geq 3\), but only the first 3 columns are linked with \(\y\)
     - Split into training and testing tests and evaluate a linear regression model: what happens when \(p\) becomes large?
