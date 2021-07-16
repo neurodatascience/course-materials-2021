@@ -226,18 +226,17 @@ def grid_search(model, param_grid, X, y, score_func):
     mean_scores_for_all_params = []
     expanded_param_grid = expand_param_grid(param_grid)
     for params in expanded_param_grid:
-        # **TODO** : run a cross-validation loop, using this particular
-        # combination of parameters. Compute the mean of scores accross
-        # cross-validation folds and append it to
-        # `mean_scores_for_all_params`.
-        mean_score = "TODO"
-        mean_scores_for_all_params.append(mean_score)
-    # `clone` is to work with a copy of `model` instead of modifying the
-    # argument itself.
+        cv_scores = []
+        for train_idx, test_idx in get_train_test_indices(len(y)):
+            score = fit_and_evaluate(
+                model, params, X, y, train_idx, test_idx, score_func
+            )
+            cv_scores.append(score)
+        mean_scores_for_all_params.append(np.mean(cv_scores))
+    best_params = expanded_param_grid[np.argmax(mean_scores_for_all_params)]
     best_model = clone(model)
-    # **TODO**: select the best hyperparameters according to the CV scores,
-    # refit the model on the whole data using these parameters, and return the
-    # fitted model. Use `model.set_params` to set the parameters
+    best_model.set_params(**best_params)
+    best_model.fit(X, y)
     return best_model
 
 
@@ -276,11 +275,11 @@ def cross_validate(model, param_grid, X, y, score_func, k=5):
     """
     scores = []
     for train_idx, test_idx in get_train_test_indices(len(y), k=k):
-        # **TODO**: complete the cross-validation loop. For each train, test
-        # split, use `grid_search` to run an inner cross-validation loop on the
-        # train data, then evaluate the resulting model on test data and store
-        # the resulting score.
-        print("TODO")
+        best_model = grid_search(
+            model, param_grid, X[train_idx], y[train_idx], score_func
+        )
+        predictions = best_model.predict(X[test_idx])
+        scores.append(score_func(y[test_idx], predictions))
     return scores
 
 
