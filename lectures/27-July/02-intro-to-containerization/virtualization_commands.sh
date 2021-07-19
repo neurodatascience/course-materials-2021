@@ -2,9 +2,9 @@
 
 ##### intro #####
 
-git clone https://github.com/neurodatascience/course-materials-2020
+git clone https://github.com/neurodatascience/course-materials-2021
 
-cd course-materials-2020/lectures/12-may/02-intro-to-containerization
+cd course-materials-2021/lectures/27-july/02-intro-to-containerization
 
 python fancy_DTI_analyzes.py
 
