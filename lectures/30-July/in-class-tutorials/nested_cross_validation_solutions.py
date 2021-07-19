@@ -178,6 +178,9 @@ def fit_and_evaluate(model, params, X, y, train_idx, test_idx, score_func):
     model.fit(X[train_idx], y[train_idx])
     predictions = model.predict(X[test_idx])
     score = score_func(y[test_idx], predictions)
+    print(
+        f"    Inner CV loop: fit and evaluate one model; score = {score:.2f}"
+    )
     return score
 
 
@@ -225,7 +228,8 @@ def grid_search(model, param_grid, X, y, score_func):
     """
     mean_scores_for_all_params = []
     expanded_param_grid = expand_param_grid(param_grid)
-    for params in expanded_param_grid:
+    for i, params in enumerate(expanded_param_grid):
+        print(f"  Grid search: evaluate parameter combination {i}")
         cv_scores = []
         for train_idx, test_idx in get_train_test_indices(len(y)):
             score = fit_and_evaluate(
@@ -233,7 +237,14 @@ def grid_search(model, param_grid, X, y, score_func):
             )
             cv_scores.append(score)
         mean_scores_for_all_params.append(np.mean(cv_scores))
-    best_params = expanded_param_grid[np.argmax(mean_scores_for_all_params)]
+    best_idx = np.argmax(mean_scores_for_all_params)
+    best_params = expanded_param_grid[best_idx]
+    print(
+        f"  Grid search: keep best parameters (combination {best_idx}): "
+        f"{best_params}"
+    )
+    # `clone` is to work with a copy of `model` instead of modifying the
+    # argument itself.
     best_model = clone(model)
     best_model.set_params(**best_params)
     best_model.fit(X, y)
@@ -274,12 +285,17 @@ def cross_validate(model, param_grid, X, y, score_func, k=5):
 
     """
     scores = []
-    for train_idx, test_idx in get_train_test_indices(len(y), k=k):
+    for i, (train_idx, test_idx) in enumerate(
+        get_train_test_indices(len(y), k=k)
+    ):
+        print(f"\nOuter CV loop: fold {i}")
         best_model = grid_search(
             model, param_grid, X[train_idx], y[train_idx], score_func
         )
         predictions = best_model.predict(X[test_idx])
-        scores.append(score_func(y[test_idx], predictions))
+        score = score_func(y[test_idx], predictions)
+        print(f"Outer CV loop: finished fold {i}, score: {score:.2f}")
+        scores.append(score)
     return scores
 
 
@@ -322,7 +338,7 @@ if __name__ == "__main__":
         scoring="accuracy",
         cv=model_selection.KFold(5),
     )["test_score"]
-    print("My scores:")
+    print("\n\nMy scores:")
     print(my_scores)
     print("Scikit-learn scores:")
     print(list(sklearn_scores))

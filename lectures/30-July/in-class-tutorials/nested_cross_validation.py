@@ -178,6 +178,9 @@ def fit_and_evaluate(model, params, X, y, train_idx, test_idx, score_func):
     model.fit(X[train_idx], y[train_idx])
     predictions = model.predict(X[test_idx])
     score = score_func(y[test_idx], predictions)
+    print(
+        f"    Inner CV loop: fit and evaluate one model; score = {score:.2f}"
+    )
     return score
 
 
@@ -225,7 +228,8 @@ def grid_search(model, param_grid, X, y, score_func):
     """
     mean_scores_for_all_params = []
     expanded_param_grid = expand_param_grid(param_grid)
-    for params in expanded_param_grid:
+    for i, params in enumerate(expanded_param_grid):
+        print(f"  Grid search: evaluate parameter combination {i}")
         # **TODO** : run a cross-validation loop, using this particular
         # combination of parameters. Compute the mean of scores accross
         # cross-validation folds and append it to
@@ -238,6 +242,12 @@ def grid_search(model, param_grid, X, y, score_func):
     # **TODO**: select the best hyperparameters according to the CV scores,
     # refit the model on the whole data using these parameters, and return the
     # fitted model. Use `model.set_params` to set the parameters
+    best_idx = "TODO"
+    best_params = expanded_param_grid[best_idx]
+    print(
+        f"  Grid search: keep best parameters (combination {best_idx}): "
+        f"{best_params}"
+    )
     return best_model
 
 
@@ -275,12 +285,17 @@ def cross_validate(model, param_grid, X, y, score_func, k=5):
 
     """
     scores = []
-    for train_idx, test_idx in get_train_test_indices(len(y), k=k):
+    for i, (train_idx, test_idx) in enumerate(
+        get_train_test_indices(len(y), k=k)
+    ):
+        print(f"\nOuter CV loop: fold {i}")
         # **TODO**: complete the cross-validation loop. For each train, test
         # split, use `grid_search` to run an inner cross-validation loop on the
         # train data, then evaluate the resulting model on test data and store
         # the resulting score.
-        print("TODO")
+        score = "TODO"
+        print(f"Outer CV loop: finished fold {i}, score: {score:.2f}")
+        scores.append(score)
     return scores
 
 
@@ -323,7 +338,7 @@ if __name__ == "__main__":
         scoring="accuracy",
         cv=model_selection.KFold(5),
     )["test_score"]
-    print("My scores:")
+    print("\n\nMy scores:")
     print(my_scores)
     print("Scikit-learn scores:")
     print(list(sklearn_scores))
