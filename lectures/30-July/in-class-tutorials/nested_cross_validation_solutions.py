@@ -302,7 +302,10 @@ if __name__ == "__main__":
     # X, y = datasets.load_wine(return_X_y=True)
     X, y = datasets.load_iris(return_X_y=True)
     idx = np.arange(len(y))
-    np.random.default_rng(0).shuffle(idx)
+    np.random.RandomState(0).shuffle(idx)
+    # this is now the recommended way of doing this, but only works with recent
+    # versions of numpy:
+    # np.random.default_rng(0).shuffle(idx)
     X, y = X[idx], y[idx]
     model = linear_model.LogisticRegression()
     param_grid = {"C": [0.001, 0.01, 0.1]}
