@@ -149,15 +149,33 @@ def prepare_pipelines():
     }
 
 
-if __name__ == "__main__":
-    X, y = load_timeseries_and_site()
-    models = prepare_pipelines()
+def compute_cv_scores(models, X, y):
+    """Compute cross-validation scores for all models
+
+    `models` is a dictionary like the one returned by `prepare_pipelines`, ie
+    of the form `{"model_name": estimator}`, where `estimator` is a
+    scikit-learn estimator.
+
+    `X` and `y` are the design matrix and the outputs to predict.
+
+    Returns a `pd.DataFrame` with one row for each model and cross-validation
+    fold. Columns include `test_score` and `fit_time`.
+
+    """
     all_scores = []
     for model_name, model in models.items():
         model_scores = pd.DataFrame(cross_validate(model, X, y))
         model_scores["model"] = model_name
         all_scores.append(model_scores)
     all_scores = pd.concat(all_scores)
+    return all_scores
+
+
+if __name__ == "__main__":
+    X, y = load_timeseries_and_site()
+    models = prepare_pipelines()
+    all_scores = compute_cv_scores(models, X, y)
     print(all_scores.groupby("model").mean())
     sns.stripplot(data=all_scores, x="test_score", y="model")
+    plt.tight_layout()
     plt.show()
