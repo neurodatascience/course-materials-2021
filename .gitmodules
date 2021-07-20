@@ -1,1 +1,4 @@
 
+[submodule "lectures/26-July/03-intro-to-git-and-github"]
+	path = lectures/26-July/03-intro-to-git-and-github
+	url = https://github.com/koudyk/intro_git_github
