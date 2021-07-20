@@ -130,7 +130,7 @@ def prepare_pipelines():
                 "feature_extraction",
                 ConnectivityMeasure(kind="correlation", vectorize=True),
             ),
-            ("logistic", LogisticRegressionCV()),
+            ("logistic", LogisticRegressionCV(solver="liblinear")),
         ]
     )
     pca_logistic_reg = Pipeline(
@@ -140,7 +140,7 @@ def prepare_pipelines():
                 ConnectivityMeasure(kind="correlation", vectorize=True),
             ),
             ("pca", PCA(n_components=20)),
-            ("logistic", LogisticRegressionCV()),
+            ("logistic", LogisticRegressionCV(solver="liblinear")),
         ]
     )
     dummy = Pipeline(
@@ -176,6 +176,7 @@ def compute_cv_scores(models, X, y):
     """
     all_scores = []
     for model_name, model in models.items():
+        print(f"Computing scores for model: '{model_name}'")
         model_scores = pd.DataFrame(cross_validate(model, X, y))
         model_scores["model"] = model_name
         all_scores.append(model_scores)
