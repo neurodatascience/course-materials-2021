@@ -24,14 +24,14 @@
 # - Grid-search (inner loop):
 #   - obtain 5 (train, test) splits for the available data (the training data
 #     from the outer loop)
-#   - initialize `mean_scores_for_all_params` to an empty list
-#   - for each possible hyperparameter value c:
+#   - initialize `hyperparameter_scores` to an empty list
+#   - for each possible hyperparameter value C:
 #     + initialize `cv_scores` to an empty list
 #     + for each  train, test split:
-#       * fit a model on train, using the hyperparameter c
+#       * fit a model on train, using the hyperparameter C
 #       * evaluate the model on test
 #       * append the resulting score to `cv_scores`
-#     + append the mean of `cv_scores` to `mean_scores_for_all_params`
+#     + append the mean of `cv_scores` to `hyperparameter_scores`
 #   - select the hyperparameter with the best mean score
 #   - refit the model on the whole available data, using the selected
 #     hyperparameter
@@ -42,9 +42,9 @@
 # `cross_validate` and `grid_search` so that the whole nested cross-validation
 # can be run.
 #
-# Some helper routines, `get_train_test_indices`, `fit_and_evaluate`, and
-# `expand_param_grid`, are provided to make the task easier. Make sure you read
-# their code and understand what they do.
+# Some helper routines, `get_train_test_indices` and `fit_and_evaluate`, are
+# provided to make the task easier. Make sure you read their code and
+# understand what they do.
 #
 # The docstrings of the incomplete functions document precisely what are their
 # parameters, and what they should compute and return. Rely on this information
@@ -61,8 +61,6 @@
 # produces correct results.
 
 # +
-import itertools
-
 import numpy as np
 from sklearn.base import clone
 
@@ -71,7 +69,7 @@ from sklearn.base import clone
 
 # ## Utilities
 #
-# The 3 functions below are helpers for the main routines `cross_validate` and
+# The 2 functions below are helpers for the main routines `cross_validate` and
 # `grid_search`. You should read them but they do not need to be modified.
 
 
@@ -112,33 +110,7 @@ def get_train_test_indices(n_samples, k=5):
     return splits
 
 
-def expand_param_grid(param_grid):
-    """
-    Construct all possible combinations of parameter values.
-
-    Parameters
-    ----------
-    `param_grid` : dict[str, list]
-      The parameters in the form {"parameter": [list of possible values]}
-      For example {"C": [.1, 1.], "penalty": ["l1", "l2"]}
-
-    Returns:
-    --------
-    `combinations` : list[dict[str, any]]
-      a list of all the possible combinations of parameters, for example:
-      ```
-      [{"C": .1, "penalty": "l1"}, {"C": .1, "penalty": "l2"},
-       {"C": 1., "penalty": "l1"}, {"C": 1., "penalty": "l2"}]
-      ```
-
-    """
-    combinations = []
-    for param_values in itertools.product(*param_grid.values()):
-        combinations.append(dict(zip(param_grid.keys(), param_values)))
-    return combinations
-
-
-def fit_and_evaluate(model, params, X, y, train_idx, test_idx, score_func):
+def fit_and_evaluate(model, C, X, y, train_idx, test_idx, score_func):
     """Fit a model on trainig data and compute its score on test data.
 
     Parameters
@@ -146,11 +118,9 @@ def fit_and_evaluate(model, params, X, y, train_idx, test_idx, score_func):
     model : scikit-learn estimator (will not be modified)
       the estimator to be evaluated
 
-    params : dict[param_name, param_value]
-
-      the hyperparameters to set on (a copy of) the estimator -- an element of
-      the list returned by `expand_param_grid`. For example:
-      `{"C": .1}`
+    C : float
+     The value for the regularization hyperparameter C to use when fitting the
+     model.
 
     X : numpy array of shape (n_samples, n_features)
       the full design matrix
@@ -174,7 +144,7 @@ def fit_and_evaluate(model, params, X, y, train_idx, test_idx, score_func):
 
     """
     model = clone(model)
-    model.set_params(**params)
+    model.set_params(C=C)
     model.fit(X[train_idx], y[train_idx])
     predictions = model.predict(X[test_idx])
     score = score_func(y[test_idx], predictions)
@@ -190,13 +160,13 @@ def fit_and_evaluate(model, params, X, y, train_idx, test_idx, score_func):
 # that it behaves as described in the docstring.
 
 
-def grid_search(model, param_grid, X, y, score_func):
+def grid_search(model, hyperparam_grid, X, y, score_func):
     """Inner loop of a nested cross-validation
 
-    This function estimates the performance of each parameter combination in
-    `param_grid` with cross validation. It then selects the best parameters and
-    refits a model on the whole data using the selected parameters. The fitted
-    model is returned.
+    This function estimates the performance of each hyperparameter in
+    `hyperparam_grid` with cross validation. It then selects the best
+    hyperparameter and refits a model on the whole data using the selected
+    hyperparameter. The fitted model is returned.
 
     Parameters
     ----------
@@ -204,10 +174,8 @@ def grid_search(model, param_grid, X, y, score_func):
       The base estimator, copies of which are trained and evaluated. `model`
       itself is not modified.
 
-    param_grid : dict[str, list]
-      grid of possible parameters to try, in the form
-      `{"param_name": [list of possible values]}`. For example:
-      `{"C": [.01, .1], "penalty": ["l1", "l2"]}`
+    hyperparam_grid : list[float]
+      list of possible values for the hyperparameter C.
 
     X : numpy array of shape (n_samples, n_features)
       the design matrix
@@ -223,35 +191,30 @@ def grid_search(model, param_grid, X, y, score_func):
     -------
     best_model : scikit-learn estimator
       A copy of `model`, fitted on the whole `(X, y)` data, with the
-      (estimated) best hyperparameters.
+      (estimated) best hyperparameter.
 
     """
-    mean_scores_for_all_params = []
-    expanded_param_grid = expand_param_grid(param_grid)
-    for i, params in enumerate(expanded_param_grid):
-        print(f"  Grid search: evaluate parameter combination {i}")
+    hyperparameter_scores = []
+    for C in hyperparam_grid:
+        print(f"  Grid search: evaluate hyperparameter C = {C}")
         cv_scores = []
         for train_idx, test_idx in get_train_test_indices(len(y)):
             score = fit_and_evaluate(
-                model, params, X, y, train_idx, test_idx, score_func
+                model, C, X, y, train_idx, test_idx, score_func
             )
             cv_scores.append(score)
-        mean_scores_for_all_params.append(np.mean(cv_scores))
-    best_idx = np.argmax(mean_scores_for_all_params)
-    best_params = expanded_param_grid[best_idx]
-    print(
-        f"  Grid search: keep best parameters (combination {best_idx}): "
-        f"{best_params}"
-    )
+        hyperparameter_scores.append(np.mean(cv_scores))
+    best_C = hyperparam_grid[np.argmax(hyperparameter_scores)]
+    print(f"  ** Grid search: keep best hyperparameter C = {best_C} **")
     # `clone` is to work with a copy of `model` instead of modifying the
     # argument itself.
     best_model = clone(model)
-    best_model.set_params(**best_params)
+    best_model.set_params(C=best_C)
     best_model.fit(X, y)
     return best_model
 
 
-def cross_validate(model, param_grid, X, y, score_func, k=5):
+def cross_validate(model, hyperparam_grid, X, y, score_func, k=5):
     """
     Get cross-validation score with an inner CV loop to select hyperparameters.
 
@@ -260,10 +223,8 @@ def cross_validate(model, param_grid, X, y, score_func, k=5):
     model : scikit-learn estimator, for example `LogisticRegression()`
       The base model to fit and evaluate. `model` itself is not modified.
 
-    param_grid : dict[str, list]
-      grid of possible parameters to try, in the form
-      `{"param_name": [list of possible values]}`. For example:
-      `{"C": [.01, .1], "penalty": ["l1", "l2"]}`
+    hyperparam_grid : list[float]
+      list of possible values for the hyperparameter C.
 
     X : numpy array of shape (n_samples, n_features)
       the design matrix
@@ -290,7 +251,7 @@ def cross_validate(model, param_grid, X, y, score_func, k=5):
     ):
         print(f"\nOuter CV loop: fold {i}")
         best_model = grid_search(
-            model, param_grid, X[train_idx], y[train_idx], score_func
+            model, hyperparam_grid, X[train_idx], y[train_idx], score_func
         )
         predictions = best_model.predict(X[test_idx])
         score = score_func(y[test_idx], predictions)
@@ -324,12 +285,15 @@ if __name__ == "__main__":
     # np.random.default_rng(0).shuffle(idx)
     X, y = X[idx], y[idx]
     model = linear_model.LogisticRegression()
-    param_grid = {"C": [0.001, 0.01, 0.1]}
+    hyperparam_grid = [0.001, 0.01, 0.1]
     score_func = metrics.accuracy_score
-    my_scores = cross_validate(model, param_grid, X, y, score_func)
+    my_scores = cross_validate(model, hyperparam_grid, X, y, score_func)
 
     grid_search_model = model_selection.GridSearchCV(
-        model, param_grid, scoring="accuracy", cv=model_selection.KFold(5)
+        model,
+        {"C": hyperparam_grid},
+        scoring="accuracy",
+        cv=model_selection.KFold(5),
     )
     sklearn_scores = model_selection.cross_validate(
         grid_search_model,
@@ -345,3 +309,22 @@ if __name__ == "__main__":
     assert np.allclose(
         my_scores, sklearn_scores
     ), "Results differ from scikit-learn!"
+
+# ## Additional exercise (optional)
+#
+# Have you noticed the hyperparameter grid was specified slightly differently
+# for the scikit-learn `GridSearchCV`? we passed a dictionary:
+# `{"C": [0.001, # 0.01, 0.1 ]}`.
+#
+# This is because with `GridSearchCV` we can specify values for several
+# hyperparameters, for example:
+# `{"C": [0.001, 0.01, 0.1], "penalty": ["l1", # "l2"]}`,
+# and all combinations of these will be tried.
+#
+# Modify this module so that we can specify such a hyperparameter grid, rather
+# than only a list of values for a specific hyperparameter named "C". Hint:
+# check the documentation for the `set_params` function of scikit-learn
+# estimators. You may want to use the python dict unpacking syntax, for example
+# `model.set_params(**hyperparams)`. You can also use `itertools.product` from
+# the python standard library to easily build all the combinations of
+# hyperparameters.
