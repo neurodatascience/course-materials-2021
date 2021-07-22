@@ -22,7 +22,7 @@
 #   - return `scores`
 #
 # - Grid-search (inner loop):
-#   - obtain 5 (train, test) splits for the available data (the training data
+#   - obtain 3 (train, test) splits for the available data (the training data
 #     from the outer loop)
 #   - initialize `hyperparameter_scores` to an empty list
 #   - for each possible hyperparameter value C:
@@ -197,10 +197,9 @@ def grid_search(model, hyperparam_grid, X, y, score_func):
     hyperparameter_scores = []
     for C in hyperparam_grid:
         print(f"  Grid search: evaluate hyperparameter C = {C}")
-        # **TODO** : run a cross-validation loop, using this particular
-        # hyperparameter C. Compute the mean of scores accross
-        # cross-validation folds and append it to
-        # `hyperparameter_scores`.
+        # **TODO** : run 3-fold cross-validation loop, using this particular
+        # hyperparameter C. Compute the mean of scores accross cross-validation
+        # folds and append it to `hyperparameter_scores`.
         mean_score = "TODO"
         hyperparameter_scores.append(mean_score)
     # **TODO**: select the best hyperparameter according to the CV scores,
@@ -286,7 +285,7 @@ if __name__ == "__main__":
     # np.random.default_rng(0).shuffle(idx)
     X, y = X[idx], y[idx]
     model = linear_model.LogisticRegression()
-    hyperparam_grid = [0.001, 0.01, 0.1]
+    hyperparam_grid = [0.0001, 0.001, 0.01, 0.1]
     score_func = metrics.accuracy_score
     my_scores = cross_validate(model, hyperparam_grid, X, y, score_func)
 
@@ -294,7 +293,7 @@ if __name__ == "__main__":
         model,
         {"C": hyperparam_grid},
         scoring="accuracy",
-        cv=model_selection.KFold(5),
+        cv=model_selection.KFold(3),
     )
     sklearn_scores = model_selection.cross_validate(
         grid_search_model,
@@ -315,11 +314,11 @@ if __name__ == "__main__":
 #
 # Have you noticed the hyperparameter grid was specified slightly differently
 # for the scikit-learn `GridSearchCV`? we passed a dictionary:
-# `{"C": [0.001, # 0.01, 0.1 ]}`.
+# `{"C": [0.0001, 0.001, 0.01, 0.1 ]}`.
 #
 # This is because with `GridSearchCV` we can specify values for several
 # hyperparameters, for example:
-# `{"C": [0.001, 0.01, 0.1], "penalty": ["l1", # "l2"]}`,
+# `{"C": [0.0001, 0.001, 0.01, 0.1], "penalty": ["l1", "l2"]}`,
 # and all combinations of these will be tried.
 #
 # Modify this module so that we can specify such a hyperparameter grid, rather
