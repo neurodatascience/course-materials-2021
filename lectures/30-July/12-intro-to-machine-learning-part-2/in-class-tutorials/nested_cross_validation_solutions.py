@@ -310,6 +310,16 @@ if __name__ == "__main__":
         my_scores, sklearn_scores
     ), "Results differ from scikit-learn!"
 
+# ## Questions
+#
+# - When running the cross-validation procedure we have just implemented, how
+#   many models did we fit in total?
+#   - Answer: 5 * (3 * 4 + 1) = 65
+# - There are 150 samples in the iris dataset. For this dataset, what is the
+#   size of the 5 test sets in the outer loop? of each of the 3 validation sets
+#   in the grid-search (inner loop)?
+#   - Answer: outer loop: 150 / 5 = 30; inner loop: (150 * 4 / 5) / 3 = 40
+#
 # ## Additional exercise (optional)
 #
 # Have you noticed the hyperparameter grid was specified slightly differently

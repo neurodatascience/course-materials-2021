@@ -56,16 +56,20 @@
 # components. To do so, add a `sklearn.decomposition.PCA` as the second step of
 # the pipeline.
 #
-# Once we have compared our 3 models (logistic, logistic with PCA and
-# baseline), we can select the one that performs best according to our
-# cross-validation. Is its cross-validation score a good estimate of how it
-# would perform on new data?
-#
 # There are 111 regions in the atlas we use to compute region-region
 # connectivity matrices: the output of the `ConnectivityMeasure` has
-# 111 * (111 # + 1) / 2 = 6216 columns.
-# What is the size of the coefficients of the logistic regression? of the
-# principal components? of the output of the PCA?
+# 111 * (111 + 1) / 2 = 6216 columns. If the dataset has 100 participants, What
+# is the size of the coefficients of the logistic regression? of the selected
+# (20 first) principal components? of the output of the PCA transformation (ie
+# the compressed design matrix)?
+#
+# Here we are storing data and model coefficients in arrays of 64-bit
+# floating-point values, meaning each number takes 64 bits = 8 bytes of memory.
+# Approximately how much memory is used by the design matrix X? by the
+# dimensionality-reduced data (ie the kept left singular vectors of X)? by the
+# principal components (the kept right singular vectors of X)?
+# Answer: X: 4,972,800 B, compressed X: 16,000 B, V: 994,560 B
+# (+ 96 bytes for all for the array object)
 #
 # As you can see, in this script we do not specify explicitly the metric
 # functions that are used to evaluate models, but rely on scikit-learn's
