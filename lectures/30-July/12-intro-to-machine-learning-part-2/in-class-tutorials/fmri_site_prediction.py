@@ -16,8 +16,15 @@
 # several transformations into a single scikit-learn estimator (an object with
 # a `fit` method). This avoids dealing with the connectivity feature extraction
 # separately and ensures everything is fitted on the training data only --
-# which is crucial here because we will add a dimensionality reduction step
-# with Principal Component Analysis.
+# which is crucial here because we will add scaling a dimensionality reduction
+# step with Principal Component Analysis.
+#
+# ## Scaling
+#
+# We add scaling of the input features using scikit-learn's StandardScaler,
+# which removes the mean and scales the features to unit variance. This helps
+# the logistic regression solver converge faster and often improves
+# performance.
 #
 # ## Dimensionality Reduction
 #
@@ -54,11 +61,13 @@
 # regression and a dummy estimator. Add a third estimator in the returned
 # dictionary, which contains a dimensionality reduction step: a PCA with 20
 # components. To do so, add a `sklearn.decomposition.PCA` as the second step of
-# the pipeline.
+# the pipeline. Note 20 is an arbitrary choice; how could we set the number of
+# components in a principled way? What is the largest number of components we
+# could ask for?
 #
 # There are 111 regions in the atlas we use to compute region-region
 # connectivity matrices: the output of the `ConnectivityMeasure` has
-# 111 * (111 + 1) / 2 = 6216 columns. If the dataset has 100 participants, What
+# 111 * (111 - 1) / 2 = 6105 columns. If the dataset has 100 participants, What
 # is the size of the coefficients of the logistic regression? of the selected
 # (20 first) principal components? of the output of the PCA transformation (ie
 # the compressed design matrix)?
@@ -68,8 +77,6 @@
 # Approximately how much memory is used by the design matrix X? by the
 # dimensionality-reduced data (ie the kept left singular vectors of X)? by the
 # principal components (the kept right singular vectors of X)?
-# Answer: X: 4,972,800 B, compressed X: 16,000 B, V: 994,560 B
-# (+ 96 bytes for all for the array object)
 #
 # As you can see, in this script we do not specify explicitly the metric
 # functions that are used to evaluate models, but rely on scikit-learn's
@@ -82,14 +89,18 @@
 #
 # Add another estimator to the options returned by `prepare_pipelines`, that
 # uses univariate feature selection instead of PCA.
+#
+# What other approach could we use to obtain connectivity features of a lower
+# dimension?
 
 
 from nilearn import datasets
 from nilearn.connectome import ConnectivityMeasure
 
-from sklearn import preprocessing
+from sklearn.base import clone
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import cross_validate
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.dummy import DummyClassifier
 
@@ -110,9 +121,7 @@ def load_timeseries_and_site(n_subjects=100):
         n_subjects=n_subjects, derivatives=["rois_ho"]
     )
     X = data["rois_ho"]
-    y = preprocessing.LabelEncoder().fit_transform(
-        data["phenotypic"]["SITE_ID"]
-    )
+    y = LabelEncoder().fit_transform(data["phenotypic"]["SITE_ID"])
     return X, y
 
 
@@ -127,24 +136,18 @@ def prepare_pipelines():
     reduction with PCA.
 
     """
-    logistic_reg = Pipeline(
-        [
-            (
-                "feature_extraction",
-                ConnectivityMeasure(kind="correlation", vectorize=True),
-            ),
-            ("logistic", LogisticRegressionCV(solver="liblinear")),
-        ]
+    connectivity = ConnectivityMeasure(
+        kind="correlation", vectorize=True, discard_diagonal=True
     )
-    dummy = Pipeline(
-        [
-            (
-                "feature_extraction",
-                ConnectivityMeasure(kind="correlation", vectorize=True),
-            ),
-            ("classif", DummyClassifier()),
-        ]
+    scaling = StandardScaler()
+    logreg = LogisticRegressionCV(solver="liblinear", cv=3, Cs=3)
+    logistic_reg = make_pipeline(
+        clone(connectivity), clone(scaling), clone(logreg)
     )
+    # make_pipeline is a convenient way to create a Pipeline by passing the
+    # steps as arguments. clone creates a copy of the input estimator, to avoid
+    # sharing the state of an estimator across pipelines.
+    dummy = make_pipeline(clone(connectivity), DummyClassifier())
     # TODO: add a pipeline with a PCA dimensionality reduction step to this
     # dictionary. You will need to import `sklearn.decomposition.PCA`.
     return {
