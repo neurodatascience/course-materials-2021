@@ -2,17 +2,21 @@
 
 I will indicate the main characteristics of the course and the expectations
 
-# 2. Introduce the instructors and TAs
+# 2. Introduce the instructors and TAs (5mn)
 
 These are awesome instructors who worked hard to make the course a place where you will learn a lot
 
-# 3. Introduce the students
+# 3. Introduce the students (15mn)
 
 Tell us who you are !
 
-# Recall the main points of the lecture (20mn)
+# 4. Recall the main points of the lecture (20mn)
 
 Recall the key points from the online pre-course material
+
+# ----- break 10mn ----
+
+# 5. Exercises
 
 ## Exercise 1 ===============================
 
@@ -37,7 +41,5 @@ Collectively, we will create a list of specific actions that students in the cou
 ## Exercise 3 ===============================
 
 Search Pubmed for the vocabulary that reflects the reproducibility crisis and see if (and how) the body of literature is growing on the topic
-
-
 
 
