@@ -87,11 +87,21 @@
 # functions that are used to evaluate models, but rely on scikit-learn's
 # defaults instead. What metric is used in order to select the best
 # hyperparameter? What metric is used to compute scores in `cross_validate`?
-# Are these defaults appropriate for our particular situation? Try replacing
-# the default metrics with other scoring functions from scikit-learn or
-# functions that you write yourself. Does the relative performance of the
-# models change?
-# Answer: sklearn.metrics.accuracy_score for both
+# Are these defaults appropriate for our particular situation?
+# Answer: sklearn.metrics.accuracy_score for both, yes
+#
+# We do not specify the cross-validation strategy either. Which
+# cross-validation procedure is used in `cross_validate`, and by the
+# `LogisticRegressionCV`? Are these choices appropriate?
+#
+# ## Additional exercises (optional)
+#
+# Try replacing the default metrics with other scoring functions from
+# scikit-learn or functions that you write yourself. Does the relative
+# performance of the models change?
+#
+# Specify the cross-validation strategy explicitly, possibly choosing a
+# different one than the default.
 #
 # Add another estimator to the options returned by `prepare_pipelines`, that
 # uses univariate feature selection instead of PCA.
