@@ -192,7 +192,7 @@ transformed_X_test = transformer.transform(X_test)
 
 * Example: =decomposition.PCA=
 ** =fit:=
-Compute Singular Value Decomposition of \(\X\)
+- Compute Singular Value Decomposition of \(\X\)
 *** Singular Value Decomposition                             :B_structureenv:
     :PROPERTIES:
     :BEAMER_env: structureenv
@@ -205,7 +205,7 @@ Compute Singular Value Decomposition of \(\X\)
 
 * Example: =decomposition.PCA=
 ** =fit:=
-Compute Singular Value Decomposition of \(\X\)
+- Compute Singular Value Decomposition of \(\X\)
 *** Singular Value Decomposition                             :B_structureenv:
     :PROPERTIES:
     :BEAMER_env: structureenv
@@ -218,7 +218,7 @@ Compute Singular Value Decomposition of \(\X\)
 
 * Example: =decomposition.PCA=
 ** =fit:=
-Compute Singular Value Decomposition of \(\X\)
+- Compute Singular Value Decomposition of \(\X\)
 *** Singular Value Decomposition                             :B_structureenv:
     :PROPERTIES:
     :BEAMER_env: structureenv
@@ -231,14 +231,16 @@ Compute Singular Value Decomposition of \(\X\)
 
 * Example: =decomposition.PCA=
 ** =fit:=
-Compute Singular Value Decomposition of \(\X\)
+- Compute Singular Value Decomposition of \(\X\)
 \begin{equation*}
 \X = \U \, \bS \, \V^T
 \end{equation*}
-
-store \(\V\)
+- store \(\V\)
 ** =transform:=
-Compute coordinates in the basis \(\V\): simply multiply by \(\V^T\)
+Compute projection on column space of \(\V\): simply multiply by \(\V^T\)
+*** Notes
+- =fit_transform=: simply return \(\U \, \bS\)
+- \(\V^T\) is the `components_` attribute of a fitted `PCA` instance
 * COMMENT Chaining transformations
   #+begin_example
 feat_extraction = ConnectivityMeasure()

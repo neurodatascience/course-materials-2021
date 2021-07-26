@@ -1,4 +1,4 @@
-% Created 2021-07-26 Mon 14:18
+% Created 2021-07-26 Mon 15:26
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,mathserif,table]{beamer}
 \usepackage[utf8]{inputenc}
@@ -102,7 +102,7 @@
 \begin{document}
 
 \maketitle
-\begin{frame}[label={sec:org26628ba}]{Problem setting}
+\begin{frame}[label={sec:org83c43e0}]{Problem setting}
 \begin{equation}
 Y = f(X) + E
 \end{equation}
@@ -114,7 +114,7 @@ Y = f(X) + E
 \item \(f\): the function we try to approximate
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org64a8279}]{Parameter estimation \aka model fitting}
+\begin{frame}[label={sec:orgcf51a65}]{Parameter estimation \aka model fitting}
 Minimize a sum of:
 \begin{itemize}
 \item the empirical risk: error on training data
@@ -133,14 +133,14 @@ Minimize a sum of:
 \end{itemize}
 \end{structureenv}
 \end{frame}
-\begin{frame}[label={sec:orgfe9f529},fragile]{scikit-learn "estimator API": \texttt{fit; predict}}
+\begin{frame}[label={sec:org3650718},fragile]{scikit-learn "estimator API": \texttt{fit; predict}}
  \begin{verbatim}
 estimator = LogisticRegression(C=1)
 estimator.fit(X_train, y_train)
 prediction = estimator.predict(X_test)
 \end{verbatim}
 \end{frame}
-\begin{frame}[label={sec:org7bfd6fb}]{Dataset transformations}
+\begin{frame}[label={sec:org6d512ad}]{Dataset transformations}
 \begin{block}{Typical pipeline}
 \begin{center}
 \includegraphics[width=.9\linewidth]{pipeline.pdf}
@@ -153,7 +153,7 @@ prediction = estimator.predict(X_test)
 \end{center}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org24c85c2},fragile]{scikit-learn "transformer API": \texttt{fit; transform}}
+\begin{frame}[label={sec:orga5ef5f2},fragile]{scikit-learn "transformer API": \texttt{fit; transform}}
  \begin{verbatim}
 transformer = StandardScaler()
 transformer.fit(X_train)
@@ -161,7 +161,7 @@ transformed_X = transformer.transform(X_train)
 \end{verbatim}
 \end{frame}
 
-\begin{frame}[label={sec:org5c2c47a},fragile]{scikit-learn "transformer API": \texttt{fit; transform}}
+\begin{frame}[label={sec:orgbc9cffc},fragile]{scikit-learn "transformer API": \texttt{fit; transform}}
  \begin{verbatim}
 transformer = StandardScaler()
 transformed_X = transformer.fit_transform(X_train)
@@ -174,7 +174,7 @@ transformed_X_test = transformer.transform(X_test)
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orge69a336},fragile]{Example: \texttt{preprocessing.StandardScaler}}
+\begin{frame}[label={sec:org071d78a},fragile]{Example: \texttt{preprocessing.StandardScaler}}
  \begin{block}{\texttt{fit:}}
 Compute mean and standard deviation of each column
 \end{block}
@@ -182,7 +182,7 @@ Compute mean and standard deviation of each column
 Subtract mean and divide by standard deviation
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org32dc6a3},fragile]{Example: \texttt{feature\_selection.SelectKBest}}
+\begin{frame}[label={sec:orgbb9c7e8},fragile]{Example: \texttt{feature\_selection.SelectKBest}}
  \begin{block}{\texttt{fit:}}
 \begin{itemize}
 \item Perform ANOVA for each column of \(X\)
@@ -196,9 +196,11 @@ Subtract mean and divide by standard deviation
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org480d059},fragile]{Example: \texttt{decomposition.PCA}}
+\begin{frame}[label={sec:org4767ae2},fragile]{Example: \texttt{decomposition.PCA}}
  \begin{block}{\texttt{fit:}}
-Compute Singular Value Decomposition of \(\X\)
+\begin{itemize}
+\item Compute Singular Value Decomposition of \(\X\)
+\end{itemize}
 \begin{structureenv} %% Singular Value Decomposition
 \begin{equation}
 \X = \U \, \bS \, \V^T
@@ -208,9 +210,11 @@ Compute Singular Value Decomposition of \(\X\)
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org99d1fd6},fragile]{Example: \texttt{decomposition.PCA}}
+\begin{frame}[label={sec:org0a546d5},fragile]{Example: \texttt{decomposition.PCA}}
  \begin{block}{\texttt{fit:}}
-Compute Singular Value Decomposition of \(\X\)
+\begin{itemize}
+\item Compute Singular Value Decomposition of \(\X\)
+\end{itemize}
 \begin{structureenv} %% Singular Value Decomposition
 \begin{equation}
 \X = \U \, \bS \, \V^T
@@ -220,9 +224,11 @@ Compute Singular Value Decomposition of \(\X\)
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:orgf3aac6e},fragile]{Example: \texttt{decomposition.PCA}}
+\begin{frame}[label={sec:org363276d},fragile]{Example: \texttt{decomposition.PCA}}
  \begin{block}{\texttt{fit:}}
-Compute Singular Value Decomposition of \(\X\)
+\begin{itemize}
+\item Compute Singular Value Decomposition of \(\X\)
+\end{itemize}
 \begin{structureenv} %% Singular Value Decomposition
 \begin{equation}
 \X = \U \, \bS \, \V^T
@@ -232,20 +238,29 @@ Compute Singular Value Decomposition of \(\X\)
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:orga8b23d6},fragile]{Example: \texttt{decomposition.PCA}}
+\begin{frame}[label={sec:org8254bbf},fragile]{Example: \texttt{decomposition.PCA}}
  \begin{block}{\texttt{fit:}}
-Compute Singular Value Decomposition of \(\X\)
+\begin{itemize}
+\item Compute Singular Value Decomposition of \(\X\)
+\end{itemize}
 \begin{equation*}
 \X = \U \, \bS \, \V^T
 \end{equation*}
-
-store \(\V\)
+\begin{itemize}
+\item store \(\V\)
+\end{itemize}
 \end{block}
 \begin{block}{\texttt{transform:}}
-Compute coordinates in the basis \(\V\): simply multiply by \(\V^T\)
+Compute projection on column space of \(\V\): simply multiply by \(\V^T\)
+\begin{block}{Notes}
+\begin{itemize}
+\item \texttt{fit\_transform}: simply return \(\U \, \bS\)
+\item \(\V^T\) is the `components\_` attribute of a fitted `PCA` instance
+\end{itemize}
+\end{block}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org9ef39fb},fragile]{Chaining transformations}
+\begin{frame}[label={sec:org0762fdf},fragile]{Chaining transformations}
  Use \texttt{sklearn.pipeline.Pipeline}
 
 \begin{verbatim}
@@ -256,20 +271,20 @@ pipe = make_pipeline(feat_extraction,
 pipe.fit(X, y)
 \end{verbatim}
 \end{frame}
-\begin{frame}[label={sec:org0c93629}]{Parameters, hyperparameters, evaluation}
+\begin{frame}[label={sec:org1122ffb}]{Parameters, hyperparameters, evaluation}
 \begin{center}
 \includegraphics[width=.9\linewidth]{figures/generated/train_eval_test/datasets.pdf}
 \end{center}
 The whole pipeline must be fitted on "Train" only (including the transformers)!
 \end{frame}
-\begin{frame}[label={sec:org2958f85},fragile]{Nested cross-validation}
+\begin{frame}[label={sec:orgf590811},fragile]{Nested cross-validation}
  \begin{center}
 \includegraphics[width=.9\linewidth]{figures/generated/train_eval_test/cv.pdf}
 \end{center}
 see  \href{https://scikit-learn.org/stable/modules/generated/sklearn.model\_selection.GridSearchCV.html}{\texttt{sklearn.model\_selection.GridSearchCV}}
 and  \href{https://scikit-learn.org/stable/modules/generated/sklearn.model\_selection.GridSearchCV.html}{\texttt{sklearn.model\_selection.cross\_validate}}
 \end{frame}
-\begin{frame}[label={sec:orgc23a66e}]{Let's start the exercises}
+\begin{frame}[label={sec:org564edfb}]{Let's start the exercises}
 \url{https://github.com/neurodatascience/course-materials-2021/tree/master/lectures/30-July/12-intro-to-machine-learning-part-2/in-class-tutorials}
 \end{frame}
 \end{document}
