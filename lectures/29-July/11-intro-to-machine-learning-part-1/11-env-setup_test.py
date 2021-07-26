@@ -6,16 +6,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from sklearn import datasets
-from sklearn.linear_model import LinearRegression
+from sklearn import datasets, linear_model, model_selection, metrics
 from sklearn.dummy import DummyRegressor
-from sklearn.metrics import mean_squared_error
 from sklearn import preprocessing
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import precision_recall_fscore_support
-from sklearn.metrics import confusion_matrix
+from sklearn.base import clone
 
 from nilearn import datasets
 from nilearn.connectome import ConnectivityMeasure
