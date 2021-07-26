@@ -1,0 +1,275 @@
+% Created 2021-07-26 Mon 14:18
+% Intended LaTeX compiler: pdflatex
+\documentclass[presentation,mathserif,table]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{minted}
+\beamertemplatenavigationsymbolsempty
+\usepackage[T1]{fontenc}
+\usepackage{DejaVuSans}
+\usepackage{DejaVuSansMono}
+\usefonttheme{professionalfonts}
+\usepackage[euler-digits,euler-hat-accent]{eulervm}
+\setbeamertemplate{itemize items}{•}
+\setbeamertemplate{enumerate items}[default]
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{
+\leavevmode%
+\hbox{%
+\begin{beamercolorbox}[wd=\paperwidth,ht=2.25ex,dp=1ex,right]{fg=black}%
+\usebeamerfont{section in head/foot}\insertsection\hspace*{2em}
+\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+\end{beamercolorbox}%
+}%
+\vskip0pt%
+}
+\usepackage{appendixnumberbeamer}
+\setbeamersize{text margin left=3mm,text margin right=3mm}
+\newcommand\blfootnote[1]{%
+\begingroup
+\renewcommand\thefootnote{}\footnote{#1}%
+\addtocounter{footnote}{-1}%
+\endgroup
+}
+\setbeamerfont{footnote}{size=\tiny}
+\usepackage{tikz}
+\usepackage[retainorgcmds]{IEEEtrantools}
+\hypersetup{colorlinks=true, allcolors=., urlcolor=blue}
+\usepackage[absolute,overlay]{textpos}
+\newcommand{\eg}{e.g.\,}
+\newcommand{\ie}{i.e.\,}
+\newcommand{\aka}{a.k.a.\,}
+\newcommand{\etc}{\emph{etc.}\,}
+\newcommand{\X}{{\mathbold X}}
+\newcommand{\bS}{{\mathbold S}}
+\newcommand{\bSigma}{{\mathbold \Sigma}}
+\newcommand{\x}{{\mathbold x}}
+\newcommand{\bbeta}{{\mathbold \beta}}
+\newcommand{\Y}{{\mathbold Y}}
+\newcommand{\y}{{\mathbold y}}
+\newcommand{\B}{{\mathbold B}}
+\newcommand{\W}{{\mathbold W}}
+\newcommand{\U}{{\mathbold U}}
+\newcommand{\V}{{\mathbold V}}
+\newcommand{\bH}{{\mathbold H}}
+\newcommand{\R}{\mathbb{R}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\tv}{TV}
+\DeclareMathOperator*{\Tr}{Tr}
+\DeclareMathOperator*{\FFT}{FFT}
+\DeclareMathOperator*{\IFFT}{IFFT}
+\DeclareMathOperator*{\diag}{diag}
+\DeclareMathOperator*{\supp}{supp}
+\DeclareMathOperator*{\tf}{tf}
+\DeclareMathOperator*{\idf}{idf}
+\DeclareMathOperator*{\df}{df}
+\DeclareMathOperator*{\Var}{Var}
+\DeclareMathOperator*{\Frob}{Frob}
+\DeclareMathOperator*{\F}{F}
+\DeclareMathOperator*{\softmax}{softmax}
+\DeclareMathOperator*{\AUC}{AUC}
+\usepackage{bm}
+\usecolortheme{dove}
+\setbeamercolor*{block title example}{fg=black,bg=white}
+\setbeamercolor*{block body example}{fg=black,bg=white}
+\usetheme{default}
+\author{Jerome Dockes}
+\date{}
+\title{ML Part 2 tutorial}
+\author{Jérôme Dockès \& Nikhil Bhagwat}
+\titlegraphic{\includegraphics[height=1.5cm]{figures/mcgill-university.png} \hspace{1.5cm} \includegraphics[height=1.5cm]{figures/origami-lab-logo.png}}
+\date{QLS course 2021-07-30}
+\subtitle{Dimensionality reduction \& cross-validation}
+\hypersetup{
+ pdfauthor={Jerome Dockes},
+ pdftitle={ML Part 2 tutorial},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 26.3 (Org mode 9.3.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\begin{frame}[label={sec:org26628ba}]{Problem setting}
+\begin{equation}
+Y = f(X) + E
+\end{equation}
+\vspace{-10pt}
+\begin{itemize}
+\item \(Y \in \R\): output (\aka target, dependent variable) to predict
+\item \(X \in \R^p\): features (\aka inputs, regressors, descriptors, independent variables)
+\item \(E \in \R\): unmodelled noise
+\item \(f\): the function we try to approximate
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org64a8279}]{Parameter estimation \aka model fitting}
+Minimize a sum of:
+\begin{itemize}
+\item the empirical risk: error on training data
+\item a regularization term
+\end{itemize}
+\begin{block}{Example: logistic regression (used today)}
+\begin{equation}
+\argmin_{\bbeta, \beta_0} \frac{1}{2} \| \bbeta \|_2^2 + C \sum_{i=1}^n \log(\exp(-y_i \, (\X_i^T \, \bbeta + \beta_0)) + 1)
+\end{equation}
+\end{block}
+\begin{structureenv} %% params
+\begin{itemize}
+\item \(\bbeta, \beta_0\): parameters to be \emph{estimated}
+\item \(C\): hyperparameter, \emph{chosen} prior to learning
+(controls amount of regularization)
+\end{itemize}
+\end{structureenv}
+\end{frame}
+\begin{frame}[label={sec:orgfe9f529},fragile]{scikit-learn "estimator API": \texttt{fit; predict}}
+ \begin{verbatim}
+estimator = LogisticRegression(C=1)
+estimator.fit(X_train, y_train)
+prediction = estimator.predict(X_test)
+\end{verbatim}
+\end{frame}
+\begin{frame}[label={sec:org7bfd6fb}]{Dataset transformations}
+\begin{block}{Typical pipeline}
+\begin{center}
+\includegraphics[width=.9\linewidth]{pipeline.pdf}
+\end{center}
+\end{block}
+
+\begin{block}{Example we will use today}
+\begin{center}
+\includegraphics[width=.9\linewidth]{pipeline_example.pdf}
+\end{center}
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:org24c85c2},fragile]{scikit-learn "transformer API": \texttt{fit; transform}}
+ \begin{verbatim}
+transformer = StandardScaler()
+transformer.fit(X_train)
+transformed_X = transformer.transform(X_train)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[label={sec:org5c2c47a},fragile]{scikit-learn "transformer API": \texttt{fit; transform}}
+ \begin{verbatim}
+transformer = StandardScaler()
+transformed_X = transformer.fit_transform(X_train)
+
+transformed_X_test = transformer.transform(X_test)
+\end{verbatim}
+\vfill
+\begin{center}
+\includegraphics[width=.9\linewidth]{pipeline_transformer_estimator.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orge69a336},fragile]{Example: \texttt{preprocessing.StandardScaler}}
+ \begin{block}{\texttt{fit:}}
+Compute mean and standard deviation of each column
+\end{block}
+\begin{block}{\texttt{transform:}}
+Subtract mean and divide by standard deviation
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:org32dc6a3},fragile]{Example: \texttt{feature\_selection.SelectKBest}}
+ \begin{block}{\texttt{fit:}}
+\begin{itemize}
+\item Perform ANOVA for each column of \(X\)
+\item Remember the indices of the \(k\) columns with highest scores
+\end{itemize}
+\end{block}
+\begin{block}{\texttt{transform:}}
+\begin{itemize}
+\item Index input to keep only the \(k\) selected columns
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org480d059},fragile]{Example: \texttt{decomposition.PCA}}
+ \begin{block}{\texttt{fit:}}
+Compute Singular Value Decomposition of \(\X\)
+\begin{structureenv} %% Singular Value Decomposition
+\begin{equation}
+\X = \U \, \bS \, \V^T
+\end{equation}
+\includegraphics[height=.5 \textheight]{figures/generated/pca_step_by_step/pca_steps_1.pdf}
+\end{structureenv}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org99d1fd6},fragile]{Example: \texttt{decomposition.PCA}}
+ \begin{block}{\texttt{fit:}}
+Compute Singular Value Decomposition of \(\X\)
+\begin{structureenv} %% Singular Value Decomposition
+\begin{equation}
+\X = \U \, \bS \, \V^T
+\end{equation}
+\includegraphics[height=.5 \textheight]{figures/generated/pca_step_by_step/pca_steps_2.pdf}
+\end{structureenv}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgf3aac6e},fragile]{Example: \texttt{decomposition.PCA}}
+ \begin{block}{\texttt{fit:}}
+Compute Singular Value Decomposition of \(\X\)
+\begin{structureenv} %% Singular Value Decomposition
+\begin{equation}
+\X = \U \, \bS \, \V^T
+\end{equation}
+\includegraphics[height=.5 \textheight]{figures/generated/pca_step_by_step/pca_steps_3.pdf}
+\end{structureenv}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orga8b23d6},fragile]{Example: \texttt{decomposition.PCA}}
+ \begin{block}{\texttt{fit:}}
+Compute Singular Value Decomposition of \(\X\)
+\begin{equation*}
+\X = \U \, \bS \, \V^T
+\end{equation*}
+
+store \(\V\)
+\end{block}
+\begin{block}{\texttt{transform:}}
+Compute coordinates in the basis \(\V\): simply multiply by \(\V^T\)
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:org9ef39fb},fragile]{Chaining transformations}
+ Use \texttt{sklearn.pipeline.Pipeline}
+
+\begin{verbatim}
+pipe = make_pipeline(feat_extraction,
+                     standardization,
+                     dim_reduction,
+                     estimator)
+pipe.fit(X, y)
+\end{verbatim}
+\end{frame}
+\begin{frame}[label={sec:org0c93629}]{Parameters, hyperparameters, evaluation}
+\begin{center}
+\includegraphics[width=.9\linewidth]{figures/generated/train_eval_test/datasets.pdf}
+\end{center}
+The whole pipeline must be fitted on "Train" only (including the transformers)!
+\end{frame}
+\begin{frame}[label={sec:org2958f85},fragile]{Nested cross-validation}
+ \begin{center}
+\includegraphics[width=.9\linewidth]{figures/generated/train_eval_test/cv.pdf}
+\end{center}
+see  \href{https://scikit-learn.org/stable/modules/generated/sklearn.model\_selection.GridSearchCV.html}{\texttt{sklearn.model\_selection.GridSearchCV}}
+and  \href{https://scikit-learn.org/stable/modules/generated/sklearn.model\_selection.GridSearchCV.html}{\texttt{sklearn.model\_selection.cross\_validate}}
+\end{frame}
+\begin{frame}[label={sec:orgc23a66e}]{Let's start the exercises}
+\url{https://github.com/neurodatascience/course-materials-2021/tree/master/lectures/30-July/12-intro-to-machine-learning-part-2/in-class-tutorials}
+\end{frame}
+\end{document}
