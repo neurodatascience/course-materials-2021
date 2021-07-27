@@ -14,11 +14,14 @@ TEST_CMAP = colors.ListedColormap(
 )
 
 
-def show_cv(outer_k, inner_k, fig):
+def show_nested_cv(outer_k, inner_k):
+    n_splits = outer_k * (2 + inner_k * 2)
+    fig = plt.figure(figsize=(12, n_splits / 3))
     outer_splits = KFold(outer_k).split(np.arange(100))
     grid = fig.add_gridspec(outer_k, 1, hspace=0.1, wspace=0)
     for i, (train, test) in enumerate(outer_splits):
         show_outer_fold(i, inner_k, grid, fig, outer_train_idx=train)
+    return fig
 
 
 def add_box(subplotspec, fig, text=""):
@@ -58,7 +61,7 @@ def show_outer_fold(fold_idx, inner_k, outer_grid, fig, outer_train_idx):
         transform=score_ax.transAxes,
     )
     score_ax.axis("off")
-    show_nested_cv(
+    show_inner_cv(
         fold_idx,
         fold_grid,
         fig,
@@ -67,7 +70,7 @@ def show_outer_fold(fold_idx, inner_k, outer_grid, fig, outer_train_idx):
     )
 
 
-def show_nested_cv(fold_idx, fold_grid, fig, inner_k, outer_train_idx):
+def show_inner_cv(fold_idx, fold_grid, fig, inner_k, outer_train_idx):
     nested_cv_grid = gridspec.GridSpecFromSubplotSpec(
         (inner_k * 2) + 1, 4, fold_grid[:-1, 2:-1], wspace=0, hspace=0
     )
@@ -100,13 +103,54 @@ def show_inner_splits(inner_k, nested_cv_grid, fig, outer_train_idx):
     refit_ax.imshow(mask, aspect="auto", cmap=TRAIN_CMAP)
 
 
+def show_simple_cv(k):
+    fig = plt.figure(figsize=(6, k))
+    splits = KFold(k).split(np.arange(100))
+    grid = fig.add_gridspec(2 * k, 4, hspace=0, wspace=0)
+    for i, (train, test) in enumerate(splits):
+        add_box(grid[2 * i : 2 * i + 2, 0], fig, f"Fold {i}")
+        add_box(grid[2 * i, 1], fig, "Train")
+        add_box(grid[2 * i + 1, 1], fig, "Test")
+        train_mask = np.zeros((1, 100), dtype=int)
+        train_mask[:, train] = 1
+        train_ax = add_box(grid[2 * i, 2], fig)
+        train_ax.imshow(train_mask, aspect="auto", cmap=TRAIN_CMAP)
+        test_ax = add_box(grid[2 * i + 1, 2], fig)
+        test_ax.imshow(~train_mask, aspect="auto", cmap=TEST_CMAP)
+        score_ax = fig.add_subplot(grid[2 * i + 1, -1])
+        score_ax.text(
+            0.1,
+            0.5,
+            f"Score {i}",
+            ha="left",
+            va="center",
+            transform=score_ax.transAxes,
+        )
+        score_ax.axis("off")
+    return fig
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("output_file", type=str, default=None)
-    parser.add_argument("--outer_k", type=int, default=5)
-    parser.add_argument("--inner_k", type=int, default=3)
+    parser.add_argument(
+        "--outer_k", type=int, default=5, help="Number of folds in outer loop"
+    )
+    parser.add_argument(
+        "--inner_k",
+        type=int,
+        default=3,
+        help="Number of folds in inner loop "
+        "(used for hyperparameter selection)",
+    )
+    parser.add_argument(
+        "--simple",
+        action="store_true",
+        help="Show simple K-fold (without grid search)",
+    )
     args = parser.parse_args()
-    n_splits = args.outer_k * (2 + args.inner_k * 2)
-    fig = plt.figure(figsize=(12, n_splits / 3))
-    show_cv(args.outer_k, args.inner_k, fig)
+    if args.simple:
+        fig = show_simple_cv(args.outer_k)
+    else:
+        fig = show_nested_cv(args.outer_k, args.inner_k)
     fig.savefig(args.output_file, bbox_inches="tight")
