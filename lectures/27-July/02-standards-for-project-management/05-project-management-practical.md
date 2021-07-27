@@ -23,10 +23,11 @@ Review online platforms that build on the BIDS Standard,
 showcasing power of field-wide adoption of standards:
 
 - OpenNeuro
-- BrainLife.io
 - NeuroScout
 
 ### Exercise 3
 
 Interactive pyBIDS demo on Binder,
 to show the utility of local adoption of standards.
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/neurodatascience/course-materials-2021/HEAD?filepath=lectures%2F27-July%2F02-standards-for-project-management%2Fpybids-demo.py)
