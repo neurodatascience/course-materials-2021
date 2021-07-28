@@ -61,26 +61,24 @@ print('\n----------------------------------------------------------------------'
 print('--------------------------- Try random model -------------------------')
 
 # Let start with random initial model intercept (b0) and parameters (aka weights aka coefficients): b1,b2,b3 
-# initial_model_coefs = np.random.uniform(0,1, n_features)
-# initial_model_intercept = np.random.uniform(0,1,1)
+initial_model_coefs = np.random.uniform(0,1, n_features)
+initial_model_intercept = np.random.uniform(0,1,1)
 
-# print(f'\nHere are model parameters before training:\nb0 (intercept): {initial_model_intercept}\nb1-b10: {initial_model_coefs}')
+print(f'\nHere are model parameters before training:\nb0 (intercept): {initial_model_intercept}\nb1-b10: {initial_model_coefs}')
 
 # How do we calculate y_hat?
 # For first sample: y_hat[0] = initial_model_intercept + initial_model_params[0]*X[0,0] + initial_model_params[1]*X[0,1] ... 
 # For second sample: y_hat[1] = initial_model_intercept + initial_model_params[1]*X[1,0] + initial_model_params[1]*X[1,1] ... 
 
 # **Exercise**: write code to calculate y_hat for all training samples! 
-# TODO 
-# y_train_hat = 
+y_train_hat = initial_model_intercept + np.dot(X_train,initial_model_coefs) 
 
-# print(f'\nPredicted  (i.e y_hat) length: {len(y_train_hat)}')
+print(f'\nPredicted  (i.e y_hat) length: {len(y_train_hat)}')
 
 # What is the error between model prediction (y_hat) and true values?
-# initial_mse = np.mean((y_train_hat - y_train)**2)
+initial_mse = np.mean((y_train_hat - y_train)**2)
 
-# print(f'\nMSE before training (i.e. using random weights): {initial_mse:.5g}')
-
+print(f'\nMSE before training (i.e. using random weights): {initial_mse:.5g}')
 #-
 
 print('\n----------------------------------------------------------------------')
@@ -89,27 +87,27 @@ print('------------------ Use scikit-learn to fit the model -----------------')
 # Now let's use scikit-learn to fit the model to the training data.
 # +
 
-# model = LinearRegression()
-# model.fit(X_train, y_train)
-# train_predictions = model.predict(X_train)
-# train_mse = mean_squared_error(y_train, train_predictions)
+model = LinearRegression()
+model.fit(X_train, y_train)
+train_predictions = model.predict(X_train)
+train_mse = mean_squared_error(y_train, train_predictions)
 
 # What did our model learn? 
 # Let's look at the model parameters (aka weights aka coefficients): b1,b2,b3 ... 
 # Note that sklearn saves the b0 separately as intercept. 
 
-# trained_model_intercept = model.intercept_
-# trained_model_coef = model.coef_
+trained_model_intercept = model.intercept_
+trained_model_coef = model.coef_
 
-# print(f'\nHere are model parameters after training:\nb0 (intercept): {trained_model_intercept}\nb1-b10: {trained_model_coef}')
+print(f'\nHere are model parameters after training:\nb0 (intercept): {trained_model_intercept}\nb1-b10: {trained_model_coef}')
 
 # Check if our MSE calculation matches with sklearn! 
-# TODO
-# y_train_hat = 
-# my_train_mse = 
+y_train_hat = trained_model_intercept + np.dot(X_train,trained_model_coef) 
 
-# print(f'\nMy calculation of MSE after model training (on train data): {my_train_mse:.5g}')
-# print(f"\nScikit-learn's calculation of MSE after model training (on train data): {train_mse:.5g}")
+my_train_mse = np.mean((y_train_hat - y_train)**2)
+
+print(f'\nMy calculation of MSE after model training (on train data): {my_train_mse:.5g}')
+print(f"\nScikit-learn's calculation of MSE after model training (on train data): {train_mse:.5g}")
 
 # -
 
@@ -120,10 +118,10 @@ print('------------ Evaluate our model on (unseen) test data ----------------')
 # Error.
 # +
 
-# print('\nBut what matter is the model performance on the test set!!')
-# test_predictions = model.predict(X_test)
-# test_mse = mean_squared_error(y_test, test_predictions)
-# print(f"Mean squared error on test data: {test_mse:.5g}")
+print('\nBut what matter is the model performance on the test set!!')
+test_predictions = model.predict(X_test)
+test_mse = mean_squared_error(y_test, test_predictions)
+print(f"Mean squared error on test data: {test_mse:.5g}")
 
 print('\n----------------------------------------------------------------------')
 print('------ Compare our performance against dummy and oracle models -------')
@@ -135,15 +133,15 @@ print('------ Compare our performance against dummy and oracle models -------')
 #
 # **Exercise**: what constant value prediction minimizes the MSE for the training sample?
 
-# dummy_predictions = DummyRegressor().fit(X_train, y_train).predict(X_test)
-# dummy_mse = mean_squared_error(y_test, dummy_predictions)
-# print(f"\nMean squared error of dummy model on test data: {dummy_mse:.5g}")
+dummy_predictions = DummyRegressor().fit(X_train, y_train).predict(X_test)
+dummy_mse = mean_squared_error(y_test, dummy_predictions)
+print(f"\nMean squared error of dummy model on test data: {dummy_mse:.5g}")
 
-# # What would be ideal predictions? (Impossible in real life!)
-# # If we had a oracle predictor - it would predict the true values on the test set perfectly! 
-# oracle_predictions = y_test
-# oracle_mse = mean_squared_error(y_test, oracle_predictions)
-# print(f"Mean squared error of oracle model on test data: {oracle_mse:.5g}")
+# What would be ideal predictions? (Impossible in real life!)
+# If we had a oracle predictor - it would predict the true values on the test set perfectly! 
+oracle_predictions = y_test
+oracle_mse = mean_squared_error(y_test, oracle_predictions)
+print(f"Mean squared error of oracle model on test data: {oracle_mse:.5g}")
 
 # -
 
@@ -156,29 +154,27 @@ print('------ Compare our performance against dummy and oracle models -------')
 print('\n----------------------------------------------------------------------')
 print('---------------------- Plot everything! ------------------------------')
 
-print('\n---------------------------- Done! -----------------------------------\n')
-
-# plt.plot(
-#     [y_test.min(), y_test.max()],
-#     [y_test.min(), y_test.max()],
-#     color="black",
-#     linestyle="--",
-# )
-# plt.scatter(y_test, oracle_predictions,marker="d")
-# plt.scatter(y_test, test_predictions)
-# plt.scatter(y_test, dummy_predictions, marker="^")
-# plt.legend(
-#     [
-#         "Identity line",
-#         "Oracle model --> Perfect prediction",
-#         f"LinearRegression model (MSE = {test_mse:.5g})",
-#         f"DummyRegressor model (MSE = {dummy_mse:.5g})",
-#     ]
-# )
-# plt.gca().set_xlabel("True outcome")
-# plt.gca().set_ylabel("Predicted outcome")
-# plt.gca().set_title("True and predicted diabetes progress")
-# plt.show()
+plt.plot(
+    [y_test.min(), y_test.max()],
+    [y_test.min(), y_test.max()],
+    color="black",
+    linestyle="--",
+)
+plt.scatter(y_test, oracle_predictions,marker="d")
+plt.scatter(y_test, test_predictions)
+plt.scatter(y_test, dummy_predictions, marker="^")
+plt.legend(
+    [
+        "Identity line",
+        "Oracle model --> Perfect prediction",
+        f"LinearRegression model (MSE = {test_mse:.5g})",
+        f"DummyRegressor model (MSE = {dummy_mse:.5g})",
+    ]
+)
+plt.gca().set_xlabel("True outcome")
+plt.gca().set_ylabel("Predicted outcome")
+plt.gca().set_title("True and predicted diabetes progress")
+plt.show()
 
 # Here we have a small number of features that are not too correlated
 # (condition number of `X_train` is 23), so linear regression without
