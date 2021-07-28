@@ -8,8 +8,7 @@
 #
 # To predict the disease progress, we will use a linear regression --
 # implemented by `sklearn.linear_model.LinearRegression`. We will compare it to
-# a "dummy" model, which always predicts the same thing, regardless of the
-# input features.
+# "random", "dummy", and "oracle" models.
 
 # +
 import numpy as np
@@ -32,7 +31,7 @@ from matplotlib import pyplot as plt
 # +
 
 print('\n----------------------------------------------------------------------')
-print('--------------------------- Load dataset -----------------------------')
+print('- 1) Load dataset ----------------------------------------------------')
 
 X, y = datasets.load_diabetes(return_X_y=True)
 (n_samples,n_features) = X.shape
@@ -58,7 +57,7 @@ print(f'n_train samples: {n_train}, n_test samples: {n_test}')
 # +
 
 print('\n----------------------------------------------------------------------')
-print('--------------------------- Try random model -------------------------')
+print('- 2) Try a random model ----------------------------------------------')
 
 # Let start with random initial model intercept (b0) and parameters (aka weights aka coefficients): b1,b2,b3 
 # initial_model_coefs = np.random.uniform(0,1, n_features)
@@ -84,7 +83,7 @@ print('--------------------------- Try random model -------------------------')
 #-
 
 print('\n----------------------------------------------------------------------')
-print('------------------ Use scikit-learn to fit the model -----------------')
+print('- 3) Use scikit-learn to fit the model -------------------------------')
 
 # Now let's use scikit-learn to fit the model to the training data.
 # +
@@ -103,7 +102,7 @@ print('------------------ Use scikit-learn to fit the model -----------------')
 
 # print(f'\nHere are model parameters after training:\nb0 (intercept): {trained_model_intercept}\nb1-b10: {trained_model_coef}')
 
-# Check if our MSE calculation matches with sklearn! 
+# **Exercise**: Check if our MSE calculation matches with sklearn! 
 # TODO
 # y_train_hat = 
 # my_train_mse = 
@@ -114,7 +113,7 @@ print('------------------ Use scikit-learn to fit the model -----------------')
 # -
 
 print('\n----------------------------------------------------------------------')
-print('------------ Evaluate our model on (unseen) test data ----------------')
+print('- 4) Evaluate our model on (unseen) test data ------------------------')
 
 # Now we evaluate our model on (unseen) test data and display its Mean Squared
 # Error.
@@ -126,7 +125,7 @@ print('------------ Evaluate our model on (unseen) test data ----------------')
 # print(f"Mean squared error on test data: {test_mse:.5g}")
 
 print('\n----------------------------------------------------------------------')
-print('------ Compare our performance against dummy and oracle models -------')
+print('- 5) Compare our performance against dummy and oracle models ---------')
 
 # We train a `DummyRegressor`. This estimator makes a constant prediction (it
 # ignores the features and always predicts the same value for `y`). However,
@@ -154,9 +153,7 @@ print('------ Compare our performance against dummy and oracle models -------')
 # **Exercise**: Is it possible to do worse than the dummy model?
 
 print('\n----------------------------------------------------------------------')
-print('---------------------- Plot everything! ------------------------------')
-
-print('\n---------------------------- Done! -----------------------------------\n')
+print('- 6) Make Plots! -----------------------------------------------------')
 
 # plt.plot(
 #     [y_test.min(), y_test.max()],
@@ -185,3 +182,5 @@ print('\n---------------------------- Done! -----------------------------------\
 # regularization works well. If the number of features were large, or if the
 # columns of X were not linearly independent, what could we use to stabilize
 # the model's parameters?
+
+print('\n- Done!!!-------------------------------------------------------------\n')
