@@ -120,7 +120,7 @@ from sklearn.model_selection import cross_validate
 from sklearn.pipeline import make_pipeline
 from sklearn.decomposition import PCA
 from sklearn.feature_selection import SelectKBest, f_classif
-from sklearn.linear_model import LogisticRegressionCV
+from sklearn.linear_model import LogisticRegressionCV, LogisticRegression
 from sklearn.dummy import DummyClassifier
 
 from matplotlib import pyplot as plt
@@ -160,6 +160,7 @@ def prepare_pipelines():
     )
     scaling = StandardScaler()
     logreg = LogisticRegressionCV(solver="liblinear", cv=3, Cs=3)
+    logreg = LogisticRegression(C=10)
     logistic_reg = make_pipeline(
         clone(connectivity), clone(scaling), clone(logreg)
     )
@@ -205,7 +206,7 @@ def compute_cv_scores(models, X, y):
     all_scores = []
     for model_name, model in models.items():
         print(f"Computing scores for model: '{model_name}'")
-        model_scores = pd.DataFrame(cross_validate(model, X, y))
+        model_scores = pd.DataFrame(cross_validate(model, X, y, return_train_score=True))
         model_scores["model"] = model_name
         all_scores.append(model_scores)
     all_scores = pd.concat(all_scores)
@@ -217,6 +218,6 @@ if __name__ == "__main__":
     models = prepare_pipelines()
     all_scores = compute_cv_scores(models, X, y)
     print(all_scores.groupby("model").mean())
-    sns.stripplot(data=all_scores, x="test_score", y="model")
+    sns.stripplot(data=all_scores, x="train_score", y="model")
     plt.tight_layout()
     plt.show()
