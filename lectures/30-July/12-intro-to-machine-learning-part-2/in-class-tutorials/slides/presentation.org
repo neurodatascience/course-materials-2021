@@ -326,9 +326,23 @@ make_pipeline(
   :PROPERTIES:
   :BEAMER_env: fullframe
   :END:
+** var                                                                :BMCOL:
+   :PROPERTIES:
+   :BEAMER_col: .33
+   :END:
+\(\small{ \text{Var}(\hat{\beta}_i) = \mathbb{E}(\hat{\beta}_i  - \mathbb{E}(\hat{\beta}_i))^2} \)
 
-#+ATTR_LATEX: :height \textheight :center
-[[file:hyperparameter_selection.pdf]]
+** plot                                                               :BMCOL:
+   :PROPERTIES:
+   :BEAMER_col: .38
+   :END:
+ #+ATTR_LATEX: :height \textheight
+ [[file:ridge_regularization_path.pdf]]
+** bias                                                               :BMCOL:
+   :PROPERTIES:
+   :BEAMER_col: .3
+   :END:
+\(\small \text{Bias}(\hat{\beta}_i) = \mathbb{E}(\hat{\beta}_i) - \beta_i\)
 * Nested cross-validation
 [[file:cv_figure_nested.pdf]]
 see  [[https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html][=sklearn.model_selection.GridSearchCV=]]
