@@ -8,7 +8,10 @@ import matplotlib as mpl
 mpl.rc("text", usetex=True)
 mpl.rc(r"\usepackage{DejaVuSans} \usepackage{eulervm}")
 
-rng = np.random.default_rng(0)
+try:
+    rng = np.random.default_rng(0)
+except AttributeError:
+    rng = np.random.RandomState(0)
 coef = np.zeros(50)
 coef[:3] = [10, -10, 20]
 alpha_grid = np.logspace(-2, 3, 50)
