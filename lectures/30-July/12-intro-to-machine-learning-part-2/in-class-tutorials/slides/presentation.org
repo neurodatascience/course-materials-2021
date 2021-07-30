@@ -138,7 +138,7 @@
 Minimize a sum of:
 - the empirical risk: error on training data
 - a regularization term
-** Example: logistic regression (used today)
+** Example: logistic regression
 \begin{equation}
 \argmin_{\bbeta, \beta_0} \frac{1}{2} \| \bbeta \|_2^2 + C \sum_{i=1}^n \log(\exp(-y_i \, (\X_i^T \, \bbeta + \beta_0)) + 1)
 \end{equation}
@@ -149,17 +149,46 @@ Minimize a sum of:
    - \(\bbeta, \beta_0\): parameters to be /estimated/
    - \(C\): hyperparameter, /chosen/ prior to learning
      (controls amount of regularization)
+[[https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html][=sklearn.linear_model.LogisticRegression=]]
 * scikit-learn "estimator API": =fit; predict=
 #+BEGIN_EXAMPLE
 estimator = LogisticRegression(C=1)
 estimator.fit(X_train, y_train)
-prediction = estimator.predict(X_test)
+predictions = estimator.predict(X_test)
 #+END_EXAMPLE
+\vfill
+https://scikit-learn.org/stable/getting_started.html
+[[https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html][=sklearn.linear_model.LogisticRegression=]]
+
+* Evaluating performance with =sklearn.metrics=
+#+BEGIN_EXAMPLE
+estimator = LogisticRegression(C=1)
+estimator.fit(X_train, y_train)
+predictions = estimator.predict(X_test)
+
+accuracy = metrics.accuracy_score(y_test, predictions)
+#+END_EXAMPLE
+\vfill
+https://scikit-learn.org/stable/getting_started.html
+[[https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html][=sklearn.linear_model.LogisticRegression=]]
+[[https://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics][=sklearn.metrics=]]
+[[https://scikit-learn.org/stable/modules/model_evaluation.html#the-scoring-parameter-defining-model-evaluation-rules][more info on model evaluation]]
+\vfill
+=ex_01_fit_predict.py=
+* Cross-validation
+#+ATTR_LATEX: :height .7 \textheight
+[[file:cv_figure_simple.pdf]]
+
+[[https://scikit-learn.org/stable/modules/cross_validation.html][=scikit-learn.org/stable/modules/cross_validation.html=]]
+[[https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html][=sklearn.model_selection.cross_validate=]]
+# https://scikit-learn.org/stable/auto_examples/model_selection/plot_cv_indices.html#sphx-glr-auto-examples-model-selection-plot-cv-indices-py
+=ex_02_cross_validate.py=
+
 * Dataset transformations
 ** Typical pipeline
  [[file:pipeline.pdf]]
 
-** Example we will use today
+** Example: for autism prediction with fMRI from ML part 1
  [[file:pipeline_example.pdf]]
 * scikit-learn "transformer API": =fit; transform=
   #+begin_example
@@ -167,7 +196,24 @@ transformer = StandardScaler()
 transformer.fit(X_train)
 transformed_X = transformer.transform(X_train)
   #+end_example
+** can also be written:
+   #+begin_example
+transformer = StandardScaler()
+transformed_X = transformer.fit_transform(X_train)
+   #+end_example
+** links                                                     :B_structureenv:
+   :PROPERTIES:
+   :BEAMER_env: structureenv
+   :END:
+ \vfill
+ [[https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler][=sklearn.preprocessing.StandardScaler=]]
 
+ [[https://scikit-learn.org/stable/getting_started.html#transformers-and-pre-processors][scikit-learn "getting started"]]
+
+ [[https://scikit-learn.org/stable/data_transforms.html][scikit-learn "user guide"]]
+
+\vfill
+=ex_03_transformer.py=
 * scikit-learn "transformer API": =fit; transform=
   #+begin_example
 transformer = StandardScaler()
@@ -178,18 +224,39 @@ transformed_X_test = transformer.transform(X_test)
 \vfill
 [[file:pipeline_transformer_estimator.pdf]]
 
+[[https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler][=sklearn.preprocessing.StandardScaler=]]
+
+[[https://scikit-learn.org/stable/getting_started.html#transformers-and-pre-processors][scikit-learn "getting started"]]
+
+[[https://scikit-learn.org/stable/data_transforms.html][scikit-learn "user guide"]]
 * Example: =preprocessing.StandardScaler=
 ** =fit:=
    Compute mean and standard deviation of each column
 ** =transform:=
    Subtract mean and divide by standard deviation
+** link                                                      :B_structureenv:
+   :PROPERTIES:
+   :BEAMER_env: structureenv
+   :END:
+
+[[https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler][=sklearn.preprocessing.StandardScaler=]]
 * Example: =feature_selection.SelectKBest=
 ** =fit:=
-   - Perform ANOVA for each column of \(X\)
+   - compute ANOVA or correlation for each column of \(X\)
    - Remember the indices of the \(k\) columns with highest scores
 ** =transform:=
    - Index input to keep only the \(k\) selected columns
 
+
+** link                                                      :B_structureenv:
+   :PROPERTIES:
+   :BEAMER_env: structureenv
+   :END:
+[[https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectKBest.html#sklearn.feature_selection.SelectKBest][=sklearn.feature_selection.SelectKBest=]]
+
+https://scikit-learn.org/stable/modules/feature_selection.html
+
+=ex_04_feature_selection.py=
 * Example: =decomposition.PCA=
 ** =fit:=
 - Compute Singular Value Decomposition of \(\X\)
@@ -241,6 +308,11 @@ Compute projection on column space of \(\V\): simply multiply by \(\V^T\)
 *** Notes
 - =fit_transform=: simply return \(\U \, \bS\)
 - \(\V^T\) is the `components_` attribute of a fitted `PCA` instance
+** link                                                      :B_structureenv:
+   :PROPERTIES:
+   :BEAMER_env: structureenv
+   :END:
+[[https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA][=sklearn.decomposition.PCA=]]
 * COMMENT Chaining transformations
   #+begin_example
 feat_extraction = ConnectivityMeasure()
@@ -255,21 +327,54 @@ estimator = LogisticRegression()
 estimator.fit(X, y)
   #+end_example
 * Chaining transformations
-Use =sklearn.pipeline.Pipeline=
-
+Use [[https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline][=sklearn.pipeline.Pipeline=]] or [[https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline][=sklearn.pipeline.make_pipeline=]]:
   #+begin_example
-pipe = make_pipeline(feat_extraction,
-                     standardization,
-                     dim_reduction,
-                     estimator)
+pipe = make_pipeline(
+    standardizer, dim_reductor, estimator
+)
 pipe.fit(X, y)
   #+end_example
-* Parameters, hyperparameters, evaluation
-[[file:figures/generated/train_eval_test/datasets.pdf]]
-The whole pipeline must be fitted on "Train" only (including the transformers)!
+** Example:
+   #+begin_example
+make_pipeline(
+    StandardScaling(), PCA(), LogisticRegression()
+)
+   #+end_example
+* Hyperparameter selection                                      :B_fullframe:
+  :PROPERTIES:
+  :BEAMER_env: fullframe
+  :END:
+** var                                                                :BMCOL:
+   :PROPERTIES:
+   :BEAMER_col: .33
+   :END:
+\(\small{ \text{Var}(\hat{\beta}_i) = \mathbb{E}(\hat{\beta}_i  - \mathbb{E}(\hat{\beta}_i))^2} \)
+
+** plot                                                               :BMCOL:
+   :PROPERTIES:
+   :BEAMER_col: .38
+   :END:
+ #+ATTR_LATEX: :height \textheight
+ [[file:ridge_regularization_path.pdf]]
+** bias                                                               :BMCOL:
+   :PROPERTIES:
+   :BEAMER_col: .3
+   :END:
+\(\small \text{Bias}(\hat{\beta}_i) = \mathbb{E}(\hat{\beta}_i) - \beta_i\)
 * Nested cross-validation
-[[file:figures/generated/train_eval_test/cv.pdf]]
+[[file:cv_figure_nested.pdf]]
 see  [[https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html][=sklearn.model_selection.GridSearchCV=]]
-and  [[https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html][=sklearn.model_selection.cross_validate=]]
-* Let's start the exercises
-https://github.com/neurodatascience/course-materials-2021/tree/master/lectures/30-July/12-intro-to-machine-learning-part-2/in-class-tutorials
+* Implementing nested CV
+  =ex_05_nested_cross_validation.py=
+* Cross-validation and hyperparameter selection in scikit-learn
+- [[https://scikit-learn.org/stable/modules/classes.html#module-sklearn.pipeline][=sklearn.pipeline.Pipeline= or =sklearn.pipeline.make_pipeline=]]
+- [[https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV][=sklearn.model_selection.GridSearchCV=]]
+- [[https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html?highlight=cross_validate#sklearn.model_selection.cross_validate][=sklearn.model_selection.cross_validate=]]
+- use =*CV= estimators! [[https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeCV.html][=RidgeCV=]], [[https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegressionCV.html][=LogisticRegressionCV=]], ...
+
+#+ATTR_LATEX: :height .5 \textheight
+[[file:grid.pdf]]
+* Cross-validation pitfalls
+- fitting part of the pipeline on the whole data: use =Pipeline=
+- ignoring some dependencies in the data: use the appropriate =cv= iterator: https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators
+- good cv scores on one dataset do not guarantee generalization to new data
