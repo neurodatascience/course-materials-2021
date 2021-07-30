@@ -3,6 +3,7 @@ from sklearn.linear_model import Ridge
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
+from matplotlib import colors
 import matplotlib as mpl
 
 mpl.rc("text", usetex=True)
@@ -48,7 +49,14 @@ fig, axes = plt.subplots(
     gridspec_kw=dict(height_ratios=[2, 1, 1, 1, 1]),
 )
 for c, (ax, true_coef) in enumerate(zip(axes[1:], coef)):
-    sns.lineplot(data=df, x="alpha", y=c, ci="sd", ax=ax)
+    sns.lineplot(
+        data=df,
+        x="alpha",
+        y=c,
+        ci="sd",
+        ax=ax,
+        color=list(colors.TABLEAU_COLORS.values())[2],
+    )
     ax.axhline(true_coef, linestyle="--", color="k")
     ax.axhline(0, linestyle="-", color="k")
     y0, y1 = ax.get_ylim()
