@@ -1,4 +1,4 @@
-% Created 2021-07-30 Fri 07:28
+% Created 2021-07-30 Fri 08:19
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,mathserif,table]{beamer}
 \usepackage[utf8]{inputenc}
@@ -101,7 +101,7 @@
 \begin{document}
 
 \maketitle
-\begin{frame}[label={sec:org5c2e22d}]{Problem setting}
+\begin{frame}[label={sec:orgac784a9}]{Problem setting}
 \begin{equation}
 Y = f(X) + E
 \end{equation}
@@ -113,7 +113,7 @@ Y = f(X) + E
 \item \(f\): the function we try to approximate
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org82b32b4},fragile]{Parameter estimation \aka model fitting}
+\begin{frame}[label={sec:orgf062812},fragile]{Parameter estimation \aka model fitting}
  Minimize a sum of:
 \begin{itemize}
 \item the empirical risk: error on training data
@@ -133,7 +133,7 @@ Y = f(X) + E
 \href{https://scikit-learn.org/stable/modules/generated/sklearn.linear\_model.LogisticRegression.html}{\texttt{sklearn.linear\_model.LogisticRegression}}
 \end{structureenv}
 \end{frame}
-\begin{frame}[label={sec:org9f0effa},fragile]{scikit-learn "estimator API": \texttt{fit; predict}}
+\begin{frame}[label={sec:orgeb3e82c},fragile]{scikit-learn "estimator API": \texttt{fit; predict}}
  \begin{verbatim}
 estimator = LogisticRegression(C=1)
 estimator.fit(X_train, y_train)
@@ -144,7 +144,7 @@ predictions = estimator.predict(X_test)
 \href{https://scikit-learn.org/stable/modules/generated/sklearn.linear\_model.LogisticRegression.html}{\texttt{sklearn.linear\_model.LogisticRegression}}
 \end{frame}
 
-\begin{frame}[label={sec:orgef1e5b2},fragile]{Evaluating performance with \texttt{sklearn.metrics}}
+\begin{frame}[label={sec:org82bf956},fragile]{Evaluating performance with \texttt{sklearn.metrics}}
  \begin{verbatim}
 estimator = LogisticRegression(C=1)
 estimator.fit(X_train, y_train)
@@ -157,17 +157,21 @@ accuracy = metrics.accuracy_score(y_test, predictions)
 \href{https://scikit-learn.org/stable/modules/generated/sklearn.linear\_model.LogisticRegression.html}{\texttt{sklearn.linear\_model.LogisticRegression}}
 \href{https://scikit-learn.org/stable/modules/classes.html\#module-sklearn.metrics}{\texttt{sklearn.metrics}}
 \href{https://scikit-learn.org/stable/modules/model\_evaluation.html\#the-scoring-parameter-defining-model-evaluation-rules}{more info on model evaluation}
+\vfill
+\texttt{ex\_01\_fit\_predict.py}
 \end{frame}
-\begin{frame}[label={sec:org3906275},fragile]{Cross-validation}
+\begin{frame}[label={sec:org3a522e8},fragile]{Cross-validation}
  \begin{center}
 \includegraphics[height=.7 \textheight]{cv_figure_simple.pdf}
 \end{center}
 
 \href{https://scikit-learn.org/stable/modules/cross\_validation.html}{\texttt{scikit-learn.org/stable/modules/cross\_validation.html}}
 \href{https://scikit-learn.org/stable/modules/generated/sklearn.model\_selection.GridSearchCV.html}{\texttt{sklearn.model\_selection.cross\_validate}}
+
+\texttt{ex\_02\_cross\_validate.py}
 \end{frame}
 
-\begin{frame}[label={sec:orgd1b4313}]{Dataset transformations}
+\begin{frame}[label={sec:org7a37111}]{Dataset transformations}
 \begin{block}{Typical pipeline}
 \begin{center}
 \includegraphics[width=.9\linewidth]{pipeline.pdf}
@@ -180,20 +184,31 @@ accuracy = metrics.accuracy_score(y_test, predictions)
 \end{center}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org1a5c7de},fragile]{scikit-learn "transformer API": \texttt{fit; transform}}
+\begin{frame}[label={sec:orged28f64},fragile]{scikit-learn "transformer API": \texttt{fit; transform}}
  \begin{verbatim}
 transformer = StandardScaler()
 transformer.fit(X_train)
 transformed_X = transformer.transform(X_train)
 \end{verbatim}
+\begin{block}{can also be written:}
+\begin{verbatim}
+transformer = StandardScaler()
+transformed_X = transformer.fit_transform(X_train)
+\end{verbatim}
+\end{block}
+\begin{structureenv} %% links
 \vfill
 \href{https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html\#sklearn.preprocessing.StandardScaler}{\texttt{sklearn.preprocessing.StandardScaler}}
 
 \href{https://scikit-learn.org/stable/getting\_started.html\#transformers-and-pre-processors}{scikit-learn "getting started"}
 
 \href{https://scikit-learn.org/stable/data\_transforms.html}{scikit-learn "user guide"}
+
+\vfill
+\texttt{ex\_03\_transformer.py}
+\end{structureenv}
 \end{frame}
-\begin{frame}[label={sec:orgba75fbb},fragile]{scikit-learn "transformer API": \texttt{fit; transform}}
+\begin{frame}[label={sec:orgc43e9e6},fragile]{scikit-learn "transformer API": \texttt{fit; transform}}
  \begin{verbatim}
 transformer = StandardScaler()
 transformed_X = transformer.fit_transform(X_train)
@@ -211,7 +226,7 @@ transformed_X_test = transformer.transform(X_test)
 
 \href{https://scikit-learn.org/stable/data\_transforms.html}{scikit-learn "user guide"}
 \end{frame}
-\begin{frame}[label={sec:org911714e},fragile]{Example: \texttt{preprocessing.StandardScaler}}
+\begin{frame}[label={sec:org91fc40c},fragile]{Example: \texttt{preprocessing.StandardScaler}}
  \begin{block}{\texttt{fit:}}
 Compute mean and standard deviation of each column
 \end{block}
@@ -222,10 +237,10 @@ Subtract mean and divide by standard deviation
 \href{https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html\#sklearn.preprocessing.StandardScaler}{\texttt{sklearn.preprocessing.StandardScaler}}
 \end{structureenv}
 \end{frame}
-\begin{frame}[label={sec:org6722081},fragile]{Example: \texttt{feature\_selection.SelectKBest}}
+\begin{frame}[label={sec:org7e8010e},fragile]{Example: \texttt{feature\_selection.SelectKBest}}
  \begin{block}{\texttt{fit:}}
 \begin{itemize}
-\item Perform ANOVA for each column of \(X\)
+\item compute ANOVA or correlation for each column of \(X\)
 \item Remember the indices of the \(k\) columns with highest scores
 \end{itemize}
 \end{block}
@@ -238,10 +253,13 @@ Subtract mean and divide by standard deviation
 
 \begin{structureenv} %% link
 \href{https://scikit-learn.org/stable/modules/generated/sklearn.feature\_selection.SelectKBest.html\#sklearn.feature\_selection.SelectKBest}{\texttt{sklearn.feature\_selection.SelectKBest}}
+
+\url{https://scikit-learn.org/stable/modules/feature\_selection.html}
+
+\texttt{ex\_04\_feature\_selection.py}
 \end{structureenv}
 \end{frame}
-
-\begin{frame}[label={sec:orgac53f12},fragile]{Example: \texttt{decomposition.PCA}}
+\begin{frame}[label={sec:org6cbd1a5},fragile]{Example: \texttt{decomposition.PCA}}
  \begin{block}{\texttt{fit:}}
 \begin{itemize}
 \item Compute Singular Value Decomposition of \(\X\)
@@ -255,7 +273,7 @@ Subtract mean and divide by standard deviation
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:orgc1c79be},fragile]{Example: \texttt{decomposition.PCA}}
+\begin{frame}[label={sec:orgbaa717e},fragile]{Example: \texttt{decomposition.PCA}}
  \begin{block}{\texttt{fit:}}
 \begin{itemize}
 \item Compute Singular Value Decomposition of \(\X\)
@@ -269,7 +287,7 @@ Subtract mean and divide by standard deviation
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:orgf2ac346},fragile]{Example: \texttt{decomposition.PCA}}
+\begin{frame}[label={sec:orgc086682},fragile]{Example: \texttt{decomposition.PCA}}
  \begin{block}{\texttt{fit:}}
 \begin{itemize}
 \item Compute Singular Value Decomposition of \(\X\)
@@ -283,7 +301,7 @@ Subtract mean and divide by standard deviation
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org2f90aea},fragile]{Example: \texttt{decomposition.PCA}}
+\begin{frame}[label={sec:orgbfb1cd2},fragile]{Example: \texttt{decomposition.PCA}}
  \begin{block}{\texttt{fit:}}
 \begin{itemize}
 \item Compute Singular Value Decomposition of \(\X\)
@@ -308,7 +326,7 @@ Compute projection on column space of \(\V\): simply multiply by \(\V^T\)
 \href{https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html\#sklearn.decomposition.PCA}{\texttt{sklearn.decomposition.PCA}}
 \end{structureenv}
 \end{frame}
-\begin{frame}[label={sec:orgc444ec9},fragile]{Chaining transformations}
+\begin{frame}[label={sec:orgf919aa6},fragile]{Chaining transformations}
  Use \href{https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html\#sklearn.pipeline.Pipeline}{\texttt{sklearn.pipeline.Pipeline}} or \href{https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make\_pipeline.html\#sklearn.pipeline.make\_pipeline}{\texttt{sklearn.pipeline.make\_pipeline}}:
 \begin{verbatim}
 pipe = make_pipeline(
@@ -324,7 +342,7 @@ make_pipeline(
 \end{verbatim}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgaa30031}]{}
+\begin{frame}[label={sec:org42755c8}]{}
 \begin{columns}
 \begin{column}{.33\columnwidth}
 \(\small{ \text{Var}(\hat{\beta}_i) = \mathbb{E}(\hat{\beta}_i  - \mathbb{E}(\hat{\beta}_i))^2}\)
@@ -340,16 +358,16 @@ make_pipeline(
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:orgfa7622e},fragile]{Nested cross-validation}
+\begin{frame}[label={sec:org11d1bcf},fragile]{Nested cross-validation}
  \begin{center}
 \includegraphics[width=.9\linewidth]{cv_figure_nested.pdf}
 \end{center}
 see  \href{https://scikit-learn.org/stable/modules/generated/sklearn.model\_selection.GridSearchCV.html}{\texttt{sklearn.model\_selection.GridSearchCV}}
 \end{frame}
-\begin{frame}[label={sec:orgfc14eda},fragile]{Implementing nested CV}
- See \texttt{nested\_cross\_validation.py}
+\begin{frame}[label={sec:org49a2837},fragile]{Implementing nested CV}
+ \texttt{ex\_05\_nested\_cross\_validation.py}
 \end{frame}
-\begin{frame}[label={sec:org0141d31},fragile]{Cross-validation and hyperparameter selection in scikit-learn}
+\begin{frame}[label={sec:orgcb9dc7b},fragile]{Cross-validation and hyperparameter selection in scikit-learn}
  \begin{itemize}
 \item \href{https://scikit-learn.org/stable/modules/classes.html\#module-sklearn.pipeline}{\texttt{sklearn.pipeline.Pipeline} or \texttt{sklearn.pipeline.make\_pipeline}}
 \item \href{https://scikit-learn.org/stable/modules/generated/sklearn.model\_selection.GridSearchCV.html\#sklearn.model\_selection.GridSearchCV}{\texttt{sklearn.model\_selection.GridSearchCV}}
@@ -361,7 +379,7 @@ see  \href{https://scikit-learn.org/stable/modules/generated/sklearn.model\_sele
 \includegraphics[height=.5 \textheight]{grid.pdf}
 \end{center}
 \end{frame}
-\begin{frame}[label={sec:orgfe5528a},fragile]{Cross-validation pitfalls}
+\begin{frame}[label={sec:org6f86cec},fragile]{Cross-validation pitfalls}
  \begin{itemize}
 \item fitting part of the pipeline on the whole data: use \texttt{Pipeline}
 \item ignoring some dependencies in the data: use the appropriate \texttt{cv} iterator: \url{https://scikit-learn.org/stable/modules/cross\_validation.html\#cross-validation-iterators}

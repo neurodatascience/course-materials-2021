@@ -173,6 +173,8 @@ https://scikit-learn.org/stable/getting_started.html
 [[https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html][=sklearn.linear_model.LogisticRegression=]]
 [[https://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics][=sklearn.metrics=]]
 [[https://scikit-learn.org/stable/modules/model_evaluation.html#the-scoring-parameter-defining-model-evaluation-rules][more info on model evaluation]]
+\vfill
+=ex_01_fit_predict.py=
 * Cross-validation
 #+ATTR_LATEX: :height .7 \textheight
 [[file:cv_figure_simple.pdf]]
@@ -180,6 +182,7 @@ https://scikit-learn.org/stable/getting_started.html
 [[https://scikit-learn.org/stable/modules/cross_validation.html][=scikit-learn.org/stable/modules/cross_validation.html=]]
 [[https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html][=sklearn.model_selection.cross_validate=]]
 # https://scikit-learn.org/stable/auto_examples/model_selection/plot_cv_indices.html#sphx-glr-auto-examples-model-selection-plot-cv-indices-py
+=ex_02_cross_validate.py=
 
 * Dataset transformations
 ** Typical pipeline
@@ -193,12 +196,24 @@ transformer = StandardScaler()
 transformer.fit(X_train)
 transformed_X = transformer.transform(X_train)
   #+end_example
+** can also be written:
+   #+begin_example
+transformer = StandardScaler()
+transformed_X = transformer.fit_transform(X_train)
+   #+end_example
+** links                                                     :B_structureenv:
+   :PROPERTIES:
+   :BEAMER_env: structureenv
+   :END:
+ \vfill
+ [[https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler][=sklearn.preprocessing.StandardScaler=]]
+
+ [[https://scikit-learn.org/stable/getting_started.html#transformers-and-pre-processors][scikit-learn "getting started"]]
+
+ [[https://scikit-learn.org/stable/data_transforms.html][scikit-learn "user guide"]]
+
 \vfill
-[[https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler][=sklearn.preprocessing.StandardScaler=]]
-
-[[https://scikit-learn.org/stable/getting_started.html#transformers-and-pre-processors][scikit-learn "getting started"]]
-
-[[https://scikit-learn.org/stable/data_transforms.html][scikit-learn "user guide"]]
+=ex_03_transformer.py=
 * scikit-learn "transformer API": =fit; transform=
   #+begin_example
 transformer = StandardScaler()
@@ -227,7 +242,7 @@ transformed_X_test = transformer.transform(X_test)
 [[https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler][=sklearn.preprocessing.StandardScaler=]]
 * Example: =feature_selection.SelectKBest=
 ** =fit:=
-   - Perform ANOVA for each column of \(X\)
+   - compute ANOVA or correlation for each column of \(X\)
    - Remember the indices of the \(k\) columns with highest scores
 ** =transform:=
    - Index input to keep only the \(k\) selected columns
@@ -239,6 +254,9 @@ transformed_X_test = transformer.transform(X_test)
    :END:
 [[https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectKBest.html#sklearn.feature_selection.SelectKBest][=sklearn.feature_selection.SelectKBest=]]
 
+https://scikit-learn.org/stable/modules/feature_selection.html
+
+=ex_04_feature_selection.py=
 * Example: =decomposition.PCA=
 ** =fit:=
 - Compute Singular Value Decomposition of \(\X\)
@@ -347,7 +365,7 @@ make_pipeline(
 [[file:cv_figure_nested.pdf]]
 see  [[https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html][=sklearn.model_selection.GridSearchCV=]]
 * Implementing nested CV
-  See =nested_cross_validation.py=
+  =ex_05_nested_cross_validation.py=
 * Cross-validation and hyperparameter selection in scikit-learn
 - [[https://scikit-learn.org/stable/modules/classes.html#module-sklearn.pipeline][=sklearn.pipeline.Pipeline= or =sklearn.pipeline.make_pipeline=]]
 - [[https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV][=sklearn.model_selection.GridSearchCV=]]
