@@ -8,5 +8,6 @@ model = Ridge()
 # cross-validation scores for a ridge regression on this dataset. What
 # cross-validation strategy is used? what do the scores represent -- what
 # performance metric is used?
+# What is a good choice for k?
 scores = "???"
 print(scores)

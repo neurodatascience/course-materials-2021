@@ -12,7 +12,7 @@ import pandas as pd
 import seaborn as sns
 
 
-def load_abide_data(n_subjects=1000):
+def load_abide_data(n_subjects=100):
     data = datasets.fetch_abide_pcp(
         n_subjects=n_subjects, derivatives=["rois_ho"]
     )

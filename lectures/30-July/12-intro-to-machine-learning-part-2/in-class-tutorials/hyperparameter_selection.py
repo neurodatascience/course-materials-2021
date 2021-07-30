@@ -58,4 +58,5 @@ ax[0].set_title(
     "MSE and coefficients for a range of ɑ"
 )
 plt.tight_layout()
+plt.gcf().savefig("hyperparameter_selection.pdf", bbox_inches="tight")
 plt.show()
